@@ -59,8 +59,48 @@ ES5引入
 
 
 
+## 数据类型
+
+`ECMAScript`中有5种简单数据类型(也称为基本数据类型)
+
+- `Undefined`
+- `Null`
+- `Boolean`
+- `Number`
+- `String`
+
+一种复杂数据类型: `Object`
 
 
 
+### `typeof`操作符
 
-## 
+`typeof`操作符可能返回的字符串：
+
+- `undefined` - 如果这个值未定义
+- `boolean` - 如果这个值是布尔值
+- `string` - 如果这个值是字符串
+- `number` - 如果这个值是数值
+- `object` - 如果这个值是对象或`null`
+- `function` - 如果这个值是函数
+
+特殊情况：
+
+- 调用`typeof null`会返回`object`， 特殊值`null`被认为是一个空的对象引用
+- `Safari 5`及之前版本, `Chrome 7`及之前版本在对正则表达式调用`typeof`操作符时会返回`function`，在其他浏览器会返回`object`
+
+
+
+### `Undefined`类型
+
+一般而言, 不存在需要显式地把一个变量设置为`undefined`值的情况
+
+字面值`undefined`的主要目的是用于比较
+```javascript
+var message;
+
+// var age;
+
+alert(message); // 'undefined'
+alert(age);     // 产生错误
+```

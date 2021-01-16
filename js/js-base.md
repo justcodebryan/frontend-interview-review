@@ -104,3 +104,14 @@ var message;
 alert(message); // 'undefined'
 alert(age);     // 产生错误
 ```
+对于尚未声明过的变量, 只能执行一项操作, 即使用`typeof`操作符检测其数据类型(对未经声明的变量调用`delete`不会导致错误, 在严格模式下会报错)
+
+但是, 对未初始化的变量执行`typeof`操作符会返回`undefined`, 而对未声明的变量执行`typeof`操作符同样会返回`undefined`
+
+### `Null`类型
+
+`undefined`值是派生自`null`值的, 因此在`ECMA-262`规定中他们的相等性测试要返回`true`
+```javascript
+alert(null == undefined); // true
+```
+

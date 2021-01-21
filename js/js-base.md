@@ -3,10 +3,46 @@
 # ES5
 
 ### 基本概念
+`JavaScript`包含三个部分:
+- 核心(`ECMAScript`)
+- 文档对象模型(`DOM`)
+  - 本质: 是一个应用编程接口(API), 用于在`HTML`中使用扩展的`XML`
+  - `DOM`级别
+    - `DOM Level0` - 不存在, 是一个历史参照点, 看做`IE4`和`Netscape Navigator 4`最初支持`DHTML`
+    - `DOM Level1` 
+      - `DOM Core`(提供一种映射`XML`文档)
+      - `DOM HTML`(扩展前者并增加了特定于`HTML`的对象和方法)
+    - `DOM Level2`
+      - `DOM`视图: 描述追踪文档不同视图(如应用`CSS`样式前后的文档)的接口
+      - `DOM`事件: 描述事件及事件处理的接口
+      - `DOM`样式: 描述处理元素`CSS`样式的接口
+      - `DOM`遍历和范围: 描述遍历和操作`DOM`树的接口
+    - `DOM Level3`
+      - 统一的方式加载和保存文档的方法(包含在一个叫做`DOM Load and Save`的新模块中)
+      - 支持所有的`XML 1.0`的特性, 包括`XML Infoset`, `XPath`和`XML Base`
+    - 不再用Level来维护`DOM`, 作为`DOM Living Standard`来维护, 最新的快照称为`DOM4`
+      - `Mutation Observers`(替换`Mutation Events`)
+- 浏览器对象模型(`BOM`)
+  - 用于支持访问和操作浏览器的窗口
+  - 唯一一个没有相关标准的`JavaScript`实现
+  - 主要针对浏览器窗口和子窗口
+    - 弹出新浏览器窗口的能力
+    - 移动, 缩放和关闭浏览器窗口的能力
+    - `navigator`对象, 提供关于浏览器的详尽信息
+    - `location`对象, 提供浏览器加载页面的详尽信息
+    - `screen`对象, 提供关于用户屏幕分辨率的详尽信息
+    - `performance`对象, 提供浏览器内存占用, 导航行为和时间统计的详尽信息
+    - 对`cookie`的支持
+    - 其他自定义对象, 如`XMLHttpRequest`和`IE`的`ActiveXObject`
 
 #### 语法
 
 C语言家族, 大量借鉴C及其他类C语言(如`Java`和`Perl`)的语法
+
+`script`下有8个属性:
+
+- `async`: 可选。表示应该立即开始下载脚本，但不能阻止其他页面动作，比如下载资源或等待其他脚本加载。只对外部脚本文件有效
+- `crossorigin`: 可选, 配置相关请求的`CORS`(跨源资源共享)设置, 默认不使用
 
 #### 区分大小写
 
@@ -114,4 +150,6 @@ alert(age);     // 产生错误
 ```javascript
 alert(null == undefined); // true
 ```
+
+
 

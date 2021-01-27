@@ -67,7 +67,7 @@ let p1 = new MyPromise((resolve, reject) => {
   }
 );
 
-console.log("===========REAL PROMISE============");
+console.log("===========REAL PROMISE===========");
 const p = new Promise((resolve, reject) => {
   resolve("resolved");
   console.log("constructor");

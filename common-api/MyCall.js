@@ -7,3 +7,7 @@ function MyCall(fn) {
 
   delete context.fn;
 }
+
+function add(x, y) {
+  return x + y;
+}

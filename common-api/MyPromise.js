@@ -17,15 +17,15 @@ class MyPromise {
         this.value = value;
         this.fulfilledFnQueue.forEach((cb) => cb(this.value));
       }
-    }
-  
+    };
+
     let reject = (reason) => {
       if (this.status === PENDING) {
         this.status = REJECTED;
         this.reason = reason;
         this.rejectedFnQueue.forEach((cb) => cb(this.reason));
       }
-    }
+    };
 
     try {
       callback(resolve, reject);
@@ -61,11 +61,9 @@ console.log("===========TEST===========");
 let p1 = new MyPromise((resolve, reject) => {
   resolve("resolved");
   console.log("constructor");
-}).then(
-  (res) => {
-    console.log(res);
-  }
-);
+}).then((res) => {
+  console.log(res);
+});
 
 console.log("===========REAL PROMISE===========");
 const p = new Promise((resolve, reject) => {

@@ -1,0 +1,3 @@
+const selecSort = function(nums) {
+
+};

@@ -79,6 +79,7 @@ module.exports = {
   customComparator,
   comparator,
   isEqual,
+  generateRandomArray,
   copyArray,
   printArray
 };

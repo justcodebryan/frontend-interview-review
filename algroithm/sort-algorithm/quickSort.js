@@ -1,3 +1,7 @@
-const quickSort = function(nums) {
-  
+const { customComparator } = require('./utils');
+
+const quickSort = function (nums) {
+
 };
+
+customComparator(quickSort);

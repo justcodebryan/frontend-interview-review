@@ -55,7 +55,9 @@ const quickSort = function (nums) {
 
   function helper(arr, l, r) {
     if (l < r) {
+      // 随机快排，随机选择一个数字放在最后一个数
       swap(arr, l + Math.floor(Math.random() * (r - l + 1)), r);
+      // 返回值等于区域的左边界和右边界
       let p = partition(arr, l, r);
       helper(arr, l, p[0] - 1);
       helper(arr, p[1] + 1, r);

@@ -1,4 +1,3 @@
-// MyLazyman.js
 class _LazyMan {
   constructor(name) {
     this.name = name;

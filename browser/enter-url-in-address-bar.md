@@ -30,9 +30,8 @@
      - `dns-prefetch`
 
        ```html
-       <link rel="dns-prefetch" href="//cdn.com" /> // 推荐放在<meta
-         charset="UTF-8"
-       />
+       <!-- 推荐放在<meta charset="UTF-8" />里面 -->
+       <link rel="dns-prefetch" href="//cdn.com" /> 
        ```
 
        放在页面的顶部, 能够尽快在`DNS`服务器上面查询到对应的`IP`地址
@@ -43,7 +42,9 @@
        <meta http-equiv="x-dns-prefect-control" content="off" />
        ```
 
-   - 使用`CDN`服务器进行优化
+      - 使用`CDN`服务器进行优化
+         
+         缩短`IP`到请求方的链路和距离以加快速度
 
 2. `TCP Handshake`
 
@@ -55,13 +56,15 @@
 
    三次握手 - 又称为`SYN - SYN - ACK` , 实际上是`SYN, SYN-ACK, ACK`
 
-   - 为什么需要三次握手? 
+   - 为什么需要三次握手?
      `TCP`协议提供可靠的连接服务, 三次握手的目的是同步连接双方的序列号和确认号并交换`TCP`窗口大小信息
 
-   - 改成两次握手不行吗? 
+   - 改成两次握手不行吗?
      假设如发送了第一个请求报文, 第一个因为网络原因没能按时到达, 这时候发送端就会再发一个请求, 如果是两次握手, 服务端收到立马就建立连接, 传输数据后断开连接。之前的第一个请求最后达到了服务端， 服务端又以为是要发送数据，于是开始建立连接，但是客户端是没有准备好建立连接的，这样就会造成资源浪费。如果是三次握手建立连接，服务端第二次接受到连接的请求，但是没有接受到客户端的确认请求就不会等待建立连接。
 
-   
+   断开`TCP`连接需要四次挥手
+
+   - 为什么需要四次挥手?
 
 3. `TLS`协商
 
@@ -70,7 +73,7 @@
    这时候还没有发送内容
 
    总共 8 次往返, 浏览器可以发出请求(`DNS`查找两次 - `TCP`三次握手 - `TLS`协商三次)
-   
+
    `TLS`
 
 (以上过程还未发送任何用户的请求)
@@ -114,6 +117,64 @@
    `JS`阻塞`HTML`的解析, 因为在 js 中有可能使用`document.write`这个`API`, 将会把这个`js`文件之后的`DOM`节点全部替换掉
 
    等待获取`CSS`不会阻塞`HTML`的解析或者下载，但是它阻塞`JavaScript`，因为`JavaScript`经常用于查询元素的`CSS`属性。
+
+   
+`async`, `defer`和`module`
+
+   - 标准, `non-module`, 不是引入的模块
+
+      - 阻塞`HTML`解析
+      - 立马`fetch`, `parse`和`executed`
+      - 能保证执行顺序
+      - 阻塞`DOMContentLoaded`事件
+      - 不适合关键代码, 会导致单点故障渲染瓶颈和延迟启动
+
+   - `defer`脚本:
+
+      - 对于(`non-module`)的行内脚本会忽略`defer`并且无效
+      - 对于`module`的行内脚本, `defer`是自动(也就是暗含的)
+      - 下载不会阻塞`HTML`的解析
+      - 多个`defer`的相对位置能在执行的时候保证
+      - 在`DOM`被解析完后执行(但是在`DOMContentLoaded`前面)
+      - 阻塞`DOMContentLoaded`事件(除非这个脚本是`async defer`)
+
+   - `async`脚本:
+
+      - 对于`non-module`的行内脚本, `async`会被忽略并且无效
+      - 对于`module`的行内脚本, `async`是支持的, 并且允许不按顺序, 尽快执行
+      - 下载不会阻塞`HTML`的解析
+      - 不按顺序执行, 尽可能快地执行
+      - `async`脚本的执行顺序不能保证其相对顺序
+      - 不会等待`HTML`的解析完成, 可能会打断`DOM`的构建(特别是当其能够从浏览器缓存中获取到数据时)
+      - 阻塞`load`事件(但是不会阻塞`DOMContentLoaded`事件)
+      - 不支持`IE9-`
+
+   - `async defer`脚本
+      - 解释为`async`, 如果远古浏览器不支持的话就会解释为`defer`
+
+   `type=module` vs non-module (`type=text/javascript`) vs `<script nomodule>`
+
+   - `type=module`脚本
+      - 能执行`defer`
+      - 对于标签内脚本, 同样执行`defer`
+      - 因此, 能够保证不带有`async`的标签执行的相对顺序(标签内代码和`src`)
+      - 只执行一次, 尽管相同`src`路径的脚本加载了多次
+      - 可能会用到`import`去声明另外一个模块的脚本作为依赖(这就是其中一个`modules`被延迟的原因)
+      - 会受到`CROS`的限制(跨域的模块需要`Access-Control-Allow-Origin: *`)
+      - 当浏览器不支持的时候不会执行
+      - 但是在`IE 11`, `Firefox 52 ESR`等仍然会拉取代码
+   - `<script module >`
+      - 不会通过支持`<script type="module">`的浏览器去拉取和执行
+      - 然而还是有一些现代浏览器会有`bug`, 并且拉取
+
+`Inline` vs `src`
+
+   - `inline scripts`(without `src`)
+      - `non-module inline scripts`: `async`和`defer`都会被忽略, 脚本会阻塞`HTML`的解析和`DOM`的构建并且会立即执行
+      - `module inline scripts`: 执行`defer`, 支持`async`
+      - 不会被浏览器缓存
+   - `src`脚本
+      - 会被浏览器缓存(需要一个适当的响应`headers`), 因此可以在无网络的情况下复用
 
 7. 构建`CSSOM`树
 

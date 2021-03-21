@@ -13,7 +13,7 @@ const backtrackingAllSubSet = function (nums) {
 
   dfs([], 0);
   return res;
-}
+};
 
 const backtrackingAllArr_1 = function (nums) {
   const res = [];
@@ -31,10 +31,10 @@ const backtrackingAllArr_1 = function (nums) {
       path.pop();
     }
   }
-  
+
   dfs([]);
   return res;
-}
+};
 
 /**
  * 
@@ -48,23 +48,31 @@ const backtrackingAllArr_2 = function (nums) {
   const used = {};
 
   function dfs(path) {
+    // 判断什么时候出现结果
     if (path.length === nums.length) {
       res.push([...path]);
     }
 
+    // 遍历数组，开始进行回溯
+    // 输入 [1, 2, 3]
     for (let i = 0; i < nums.length; i++) {
       if (used[nums[i]]) continue;
+      // 进入递归，先设置已用过的元素，将map里面的状态置为true
       path.push(nums[i]);
       used[nums[i]] = true;
+
+      // 递归，深度优先遍历
       dfs(path);
+
+      // 退出递归，下次map要重新使用，所以需要将之前用过的元素弹出，将map里面的状态置为false
       path.pop();
       used[nums[i]] = false;
     }
   }
-  
+
   dfs([]);
   return res;
-}
+};
 
 const nums = [1, 2, 3];
 console.log('------backtrackingAllSubSet------');

@@ -24,3 +24,20 @@ const postorderTraversal = function (root) {
   preorderTraversal(root.right);
   console.log(root.val);  // Do Something
 };
+
+const dfs = function (root) {
+  if (root === null) return null;
+
+  const res = [];
+
+  function helper(root, arr) {
+    if (root) {
+      arr.push(root.val); // Do Something
+      helper(root.left, arr);
+      helper(root.right, arr);
+    }
+  }
+
+  helper(root, res);
+  return res;
+};

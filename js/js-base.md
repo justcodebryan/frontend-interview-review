@@ -307,3 +307,5 @@ alert(null == undefined); // true
 |  Object   |       任意对象        |       null        |
 | Undefined |    N/A （不存在）     |     undefined     |
 
+
+

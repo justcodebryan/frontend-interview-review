@@ -25,6 +25,7 @@ const postorderTraversal = function (root) {
   console.log(root.val);  // Do Something
 };
 
+// 辅助函数
 const dfs = function (root) {
   if (root === null) return null;
 

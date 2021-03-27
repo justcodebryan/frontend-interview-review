@@ -34,7 +34,7 @@ class MyPromise {
     }
   }
 
-  then(onFulfilled, onRejected) {
+  then (onFulfilled, onRejected) {
     onFulfilled = isFunction(onFulfilled) ? onFulfilled : (v) => v;
     onRejected = isFunction(onRejected) ? onRejected : (r) => Error(r);
 
@@ -51,10 +51,46 @@ class MyPromise {
       onRejected(this.reason);
     }
   }
+
+  static all (arr) {
+    if (!Array.isArray(arr)) return Promise.resolve();
+
+    const result = [];
+    const len = arr.length;
+    for (let i = 0; i < len; i++) {
+      if (!isPromise(arr[i])) {
+        result.push(arr[i]);
+      } else {
+        arr[i].then(
+          res => {
+            result.push(res);
+
+            if (result.length === len) {
+              resolve(result);
+            }
+          }, err => {
+            reject(err);
+          }
+        );
+      }
+    }
+  }
+
+  static race (arr) {
+    return new Promise((resolve, reject) => {
+      for (let i = 0; i < arr.length; i++) {
+        arr[i].then(resolve, reject);
+      }
+    });
+  }
 }
 
-function isFunction(target) {
+function isFunction (target) {
   return typeof target === "function";
+}
+
+function isPromise (target) {
+  return Object.prototype.hasOwnProperty.call(target, 'then');
 }
 
 console.log("===========TEST===========");

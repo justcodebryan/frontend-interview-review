@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Document</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+    }
+
+    html,
+    body {
+      height: 100%;
+      width: 100%;
+    }
+
+    .outer_wrapper {
+      margin: 0 10px;
+      height: 100%;
+      /* flex布局让块垂直居中 */
+      display: flex;
+      align-items: center;
+    }
+
+    .inner_wrapper {
+      background: red;
+      position: relative;
+      width: 100%;
+      height: 0;
+      /* padding-bottom取百分比的时候是相对于父元素的width */
+      /* 父元素相对定位，那绝对定位下的子元素宽高若设为百分比，是相对谁而言的？相对于父元素的(content + padding)值, 注意不含border */
+      /* 延伸：如果子元素不是绝对定位，那宽高设为百分比是相对于父元素的宽高，标准盒模型下是content, IE盒模型是content+padding+border */
+      padding-bottom: 50%;
+    }
+
+    .box {
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      font-size: 20px;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="outer_wrapper">
+    <div class="inner_wrapper">
+      <div class="box">A</div>
+    </div>
+  </div>
+</body>
+
+</html>

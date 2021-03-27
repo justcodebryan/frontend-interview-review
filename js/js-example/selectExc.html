@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="Content-Type" content="text/html">
+    <title>全选</title>
+    <script type="text/javascript">
+        window.onload = function () {
+            let items = document.getElementsByName("items");
+            let checkedAllBox = document.getElementById("checkedAllBox");
+            for (let i = 0; i < items.length; i++) {
+                items[i].onclick = function(){
+                    checkedAllBox.checked = true;
+                    for (let j = 0; j < items.length; j++) {
+                        if (!items[j].checked) {
+                            checkedAllBox.checked = false;
+                            break;
+                        }
+                    }
+                };
+            }
+
+            /**
+             * 全选
+             * 点击按钮以后， 四个多选框都选中
+             */
+            const checkedAllBtn = document.getElementById("checkedAllBtn");
+            checkedAllBtn.onclick = function () {
+                for (let i = 0; i < items.length; i++) {
+                    items[i].checked = true;
+                }
+                checkedAllBox.checked = true;
+            };
+
+            const checkedNoBtn = document.getElementById("checkedNoBtn");
+            checkedNoBtn.onclick = function () {
+                for (let i = 0; i < items.length; i++) {
+                    items[i].checked = false;
+                }
+                checkedAllBox.checked = false;
+            };
+
+            const checkedRevBtn = document.getElementById("checkedRevBtn");
+            checkedRevBtn.onclick = function () {
+                checkedAllBox.checked = true;
+                for (let i = 0; i < items.length; i++) {
+                    items[i].checked = !items[i].checked;
+                    if (!items[i].checked) {
+                        checkedAllBox.checked = false;
+                    }
+                }
+            };
+
+            const sumbitBtn = document.getElementById("submitBtn");
+            sumbitBtn.onclick = function () {
+                for (let i = 0; i < items.length; i++) {
+                    if (items[i].checked) {
+                        alert(items[i].value);
+                    }
+                }
+            };
+
+            // 给谁绑定， this就是谁
+            checkedAllBox.onclick = function () {
+                for (let i = 0; i < items.length; i++) {
+                    items[i].checked = this.checked;
+                }
+            };
+        };
+    </script>
+</head>
+<body>
+<form method="post" action="">
+    你爱好的运动是？<input type="checkbox" id="checkedAllBox"/>全选/全不选
+    <br/>
+    <input type="checkbox" name="items" id="footballBox" value="足球"/> 足球&nbsp;
+    <input type="checkbox" name="items" id="basketballBox" value="篮球"/> 篮球&nbsp;
+    <input type="checkbox" name="items" id="badmintonBox" value="羽毛球"/> 羽毛球&nbsp;
+    <input type="checkbox" name="items" id="tableTennisBox" value="乒乓球"/> 乒乓球&nbsp;
+    <br/>
+    <input type="button" id="checkedAllBtn" value="全 选"/>
+    <input type="button" id="checkedNoBtn" value="全不选"/>
+    <input type="button" id="checkedRevBtn" value="反 选"/>
+    <input type="button" id="submitBtn" value="提 交"/>
+</form>
+</body>
+</html>

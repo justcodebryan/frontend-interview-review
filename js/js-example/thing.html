@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+
+<head>
+    <title>Document</title>
+</head>
+<!-- 将事件处理逻辑直接编写到标签当中
+     当事件被触发的时候, 代码将会执行
+     这种写法称为结构和行为耦合, 不方便维护 -->
+
+<body>
+    <!-- <button id="btn1" onclick="alert('You click the button1');">Btn1</button> -->
+    <button id="btn">Btn</button>
+    <script type="text/javascript">
+        var btn = document.getElementById("btn");
+        /**
+         * 可以为按钮对应事件绑定处理函数的形式来响应事件
+         * 当事件被触发时, 其对应函数将会被调用
+         */
+
+        // 绑定一个单击事件
+        // 单击响应函数
+        btn.onclick = function(){
+            alert("btn");
+        };
+    </script>
+</body>
+
+</html>

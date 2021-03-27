@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>Page Title</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <style>
+        .box1 {
+            width: 200px;
+            height: 200px;
+            background-color: red;
+            position: relative;
+            opacity: 0.5;
+            filter: alpha(opacity=50);
+        }
+
+        .box2 {
+            width: 200px;
+            height: 200px;
+            background-color: yellow;
+            position: absolute;
+            left: 100px;
+            top: 100px;
+            z-index: 25;
+            opacity: 0.5;
+            filter: alpha(opacity=50);
+        }
+
+        .box3 {
+            width: 200px;
+            height: 200px;
+            background-color: green;
+            position: absolute;
+            left: 200px;
+            top: 200px;
+            z-index: 30;
+            opacity: 0.5;
+            filter: alpha(opacity=50);
+        }
+
+        .box4 {
+            width: 200px;
+            height: 200px;
+            background-color: orange;
+            position: relative;
+            z-index: 20;
+            opacity: 0;
+        }
+
+        .box5 {
+            width: 100px;
+            height: 100px;
+            background-color: skyblue;
+            position: absolute;
+            z-index: 10;
+            opacity: 0;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="box1"></div>
+    <div class="box2"></div>
+    <div class="box3"></div>
+    <div class="box4">
+        <div class="box5"></div>
+    </div>
+</body>
+
+</html>

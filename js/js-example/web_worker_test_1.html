@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+    <input type="text" placeholder="number" id="number">
+    <button id="btn">do</button>
+    <script type="text/javascript">
+        function fib(n){
+            return n <= 2 ? 1 : fib(n - 1) + fib(n - 2);
+        }
+        let input = document.getElementById('number');
+        document.getElementById('btn').onclick = function () {
+            let number = input.value;
+            let result = fib(number);
+            console.log(result);
+        };
+    </script>
+</body>
+</html>

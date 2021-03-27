@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>Page Title</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <style>
+        .box1 {
+            width: 200px;
+            height: 200px;
+            background-color: #bfa;
+        }
+
+        .box2 {
+            width: 100px;
+            height: 100px;
+            background-color: #ffff00;
+            margin-top: 100px;
+        }
+
+        .box3{
+            border: 1px red solid;
+        }
+
+        .box4 {
+            width: 100px;
+            height: 100px;
+            background: #bfa;
+        }
+
+        .clearfix::before,
+        .clearfix::after {
+            content: "";
+            display: table;
+            clear: both;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="box3 clearfix">
+        <div class="box4"></div>
+    </div>
+
+    <div class="box1 clearfix">
+        <div class="box2"></div>
+    </div>
+</body>
+
+</html>

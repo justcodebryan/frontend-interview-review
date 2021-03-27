@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Page Title</title>
+    <style type="text/css">
+        * {
+            margin: 0px;
+            padding: 0px;
+        }
+
+        #box1 {
+            width: 100px;
+            height: 100px;
+            background-color: red;
+            position: absolute;
+            left: 0;
+        }
+    </style>
+    <script type="text/javascript">
+        window.onload = function () {
+            let box1 = document.getElementById("box1");
+            let btn = document.getElementById("btn");
+            let timer;
+            btn.onclick = function () {
+                clearInterval(timer);
+                 timer = setInterval(function(){
+                    let oldValue = parseInt(getStyle(box1, "left"));
+                    
+                    let newValue = oldValue + 10;
+
+                    if(newValue > 800){
+                        newValue = 800;
+                    }
+
+                    box1.style.left = newValue + "px";
+
+                    if(newValue === 800) {
+                        clearInterval(timer);
+                    }
+                }, 30);
+            };
+        };
+
+        function getStyle(obj, name){
+            // 正常浏览器的方式
+            // return getComputedStyle(obj, null)[name];
+            // IE8的方式
+            // return obj.currentStyle[name];
+            if (window.getComputedStyle) {
+                return getComputedStyle(obj, null)[name];
+            } else {
+                return obj.currentStyle[name];
+            }
+        }
+    </script>
+</head>
+
+<body>
+    <button id="btn">点击按钮后div向右移动</button>
+    <div id="box1"></div>
+</body>
+
+</html>

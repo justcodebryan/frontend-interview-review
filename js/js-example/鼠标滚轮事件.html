@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <title>Page Title</title>
+    <style type="text/css">
+        #box1 {
+            width: 100px;
+            height: 100px;
+            background-color: red;
+            position: absolute;
+        }
+    </style>
+    <script type="text/javascript">
+        window.onload = function () {
+            let box1 = document.getElementById("box1");
+            
+            box1.onwheel = function (event) {
+                event = event || window.event;
+                if (event.wheelDelta > 0 || event.detail < 0) {
+                    box1.style.height = box1.clientHeight - 10 + "px";
+                } else {
+                    box1.style.height = box1.clientHeight + 10 + "px";
+                }
+                // 使用addEventListener()方法绑定响应函数, 取消默认行为时不能使用return false;
+                // 要是用event来取消默认行为
+                event.preventDefault && event.preventDefault();
+
+                // 当滚动条滚动时, 如果浏览器有滚动条, 滚动条会随之滚动, 可以通过return false; 取消默认行为
+                return false;
+            };
+
+            bind(box1, "DOMMouseScroll", box1.onwheel);
+        };
+
+        function bind(object, eventStr, callback) {
+            if (object.addEventListener) {
+                object.addEventListener(eventStr, callback, false);
+            } else {
+                /**
+                 * this是谁由调用方式决定
+                 * callback.call(object);
+                 */
+                object.attachEvent("on" + eventStr, function () {
+                    callback.call(object);
+                });
+            }
+        }
+    </script>
+</head>
+
+<body style="height:1000px;">
+    <div id="box1">
+
+    </div>
+</body>
+
+</html>

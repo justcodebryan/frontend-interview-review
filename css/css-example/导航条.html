@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>Page Title</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+        }
+
+        /* 设置ul */
+        .nav {
+            /* 除去项目符号 */
+            list-style: none;
+            background-color: #6495ED;
+            /* 在IE中指定了宽度, 默认开启hasLayout */
+            width: 1000px;
+            /* 居中 */
+            margin: 50px auto;
+            /* 解决高度塌陷 */
+            overflow: hidden;
+        }
+
+        /* 设置li */
+        .nav li {
+            /* 设置li向左浮动 */
+            float: left;
+            /* 占有父元素的25% */
+            width: 25%;
+        }
+
+        .nav a {
+            /* 将超链接转换为块元素 */
+            display: block;
+            width: 100%;
+            /* 上下边距为5px, 左右边距为0 */
+            margin: 5px 0;
+            /* 文字居中 */
+            text-align: center;
+            /* 去除下划线 */
+            text-decoration: none;
+            color: white;
+            font-weight: bold;
+        }
+
+        .nav a:hover {
+            background-color: #c00;
+        }
+    </style>
+</head>
+
+<body>
+    <!-- 导航条的结构 -->
+    <ul class="nav">
+        <li><a href="#">首页</a></li>
+        <li><a href="#">新闻</a></li>
+        <li><a href="#">联系</a></li>
+        <li><a href="#">关于</a></li>
+    </ul>
+</body>
+
+</html>

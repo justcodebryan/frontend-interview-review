@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Page Title</title>
+    <style type="text/css">
+        * {
+            margin: 0px;
+            padding: 0px;
+        }
+
+        #box1 {
+            width: 100px;
+            height: 100px;
+            background-color: red;
+            position: absolute;
+            left: 0;
+        }
+
+        #box2 {
+            width: 100px;
+            height: 100px;
+            background-color: yellow;
+            position: absolute;
+            left: 0;
+            top: 200px;
+        }
+    </style>
+    <script type="text/javascript" src="js/tools.js"></script>
+    <script type="text/javascript">
+        window.onload = function () {
+            let box1 = document.getElementById("box1");
+            let box2 = document.getElementById("box2");
+
+            let btn01 = document.getElementById("btn01");
+            btn01.onclick = function () {
+                move(box1, "left", 800, 10);
+            };
+
+            let btn02 = document.getElementById("btn02");
+            btn02.onclick = function () {
+                move(box1, "left", 0, 10);
+            };
+
+            let btn03 = document.getElementById("btn03");
+            btn03.onclick = function () {
+                move(box2, "left", 800, 10);
+            };
+
+            let btn04 = document.getElementById("btn04");
+            btn04.onclick = function () {
+                move(box2, "width", 800, 10, function () {
+                    move(box2, "top", 800, 10, function () {
+                        move(box2, "height", 800, 10, function () {
+                            alert("over");
+                        });
+                    });
+                });
+            };
+        };
+
+       
+    </script>
+</head>
+
+<body>
+    <button id="btn01">点击按钮后box1向右移动</button>
+    <button id="btn02">点击按钮后box1向左移动</button>
+    <button id="btn03">点击按钮后box2向左移动</button>
+    <button id="btn04">Testing</button>
+    <br /><br />
+    <div id="box1">box1</div>
+    <div id="box2">box2</div>
+</body>
+
+</html>

@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <title>Page Title</title>
+    <script type="text/javascript">
+        window.onload = function () {
+            let ua = navigator.userAgent;
+
+            console.log(ua);
+
+            if (/firefox/i.test(ua)) {
+                alert("firefox");
+            } else if (/chrome/i.test(ua)) {
+                alert("Chrome");
+            } else if (/msie/i.test(ua)) {
+                alert("IE");
+            }
+
+            // if(window.ActiveXObject){
+            //     alert("IE");
+            // }
+
+            // 以下这种方式可以针对Edge
+            if("ActiveXObject" in window){
+                alert("IE");
+            }
+        };
+    </script>
+</head>
+
+<body>
+
+</body>
+
+</html>

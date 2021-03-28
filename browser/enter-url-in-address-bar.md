@@ -456,3 +456,42 @@
    阻塞解析: `JS` 的运行会阻塞 `DOM` 树解析和渲染, `CSS` 的运行不会阻塞 `DOM` 树的解析, 因为 `CSS` 的解析顺序与结果无关
 
    并行下载: 最大数量下载量 -> 下载的时间和时机看代码的位置和配置
+
+8. 事件循环和浏览器渲染机制
+
+   ```html
+   <html>
+     <body>
+       <h2>Hello</h2>
+       <script>
+         function printH2() {
+           console.log('first script', document.querySelectorAll('h2'));
+         }
+         printH2();
+         setTimeout(printH2);
+       </script>
+       <link
+         rel="stylesheet"
+         href="http://cdn.bootcss.com/bootstrap/4.0.0-alpha.4/css/bootstrap.css"
+       />
+       <h2>World</h2>
+       <script>
+         console.log('second script');
+       </script>
+     </body>
+   </html>
+   ```
+
+   上面代码的运行结果是:
+
+   ```javascript
+   // 先打打印出printH2();
+   // setTimeout(printH2);
+   // 完全显示之后才执行console.log('second script');
+   ```
+
+9. `JS`异步任务与`UI`线程之间的调度
+   - CSS（外链或内联）会阻塞整个 DOM 的渲染（Rendering），然而 DOM 解析（Parsing）会正常进行
+   - 很多浏览器中，CSS 会延迟脚本执行和 DOMContentLoaded 事件
+   - JS（外链或内联）会阻塞后续 DOM 的解析（Parsing），后续 DOM 的渲染（Rendering）也将被阻塞
+   - JS 前的 DOM 可以正常解析（Parsing）和渲染（Rendering）

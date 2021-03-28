@@ -19,6 +19,14 @@ function isNumber(target) {
   return typeof target === 'number';
 }
 
+function isObject(target) {
+  return target && typeof target === 'object';
+}
+
+function isNull(target) {
+  return typeof target === 'object' && !target;
+}
+
 function isUndefined(target) {
   return typeof target === 'undefined';
 }

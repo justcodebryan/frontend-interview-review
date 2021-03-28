@@ -5,5 +5,9 @@ class EventEmitter {
     this.events = [];
   }
 
-  emit() {}
+  emit() { }
+
+  once() { }
+
+  off() { }
 }

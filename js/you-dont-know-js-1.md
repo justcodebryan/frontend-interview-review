@@ -259,4 +259,383 @@ foo = function() {
 
    
 
-2. 
+2. `this`的作用域
+   在某些情况下是正确的, 但是在某些情况下是错误的
+   `this`在任何情况在都不指向函数的词法作用域, 
+
+   ```javascript
+   function foo() {
+     var a = 2;
+     this.bar();
+   }
+   
+   function bar() {
+     console.log(this.a);
+   }
+   
+   foo();	// ReferenceError: a is not defined
+   ```
+
+
+
+`this`的机制
+
+- 运行时绑定, 上下文取决于函数调用时的各种条件, `this`的绑定和函数声明的位置没有任何关系, 只取决于函数的调用方式
+- 函数被调用的时候, 会创建一个活动记录(有时候也称为执行上下文), 记录函数在哪里被调用(调用栈), 调用方式, 传入参数等信息
+
+
+
+调用位置: 函数在代码中被调用的位置
+
+
+
+绑定规则
+
+- 默认绑定
+  最常见的调用类型: 独立函数调用
+  直接不用任何修饰的函数引用进行调用的, 只能用默认绑定, 无法应用其他规则
+
+  ```javascript
+  function foo() {
+    console.log(this.a);
+  }
+  
+  var a = 2;
+  
+  foo(); // 2
+  ```
+
+  如果使用严格模式(`strict mode`), 则不能将全局对象用于默认绑定, `this`会绑定到`undefined`
+
+
+  ```javascript
+  function foo() {
+    console.log(this.a);
+  }
+  
+  var a = 2;
+  
+  (function() {
+    "use strict";
+    foo(); // 2
+  })();
+  ```
+
+  严格模式下调用函数, 不影响函数内部的默认绑定
+
+- 隐式绑定
+  需要考虑的规则是调用位置是否有上下文对象, 或者说是否被某个对象拥有或者包含
+  对象属性引用链中只有上一层或者说最后一层在调用位置中起作用
+
+  ```javascript
+  function foo() {
+    console.log(this.a);
+  }
+  
+  var obj2 = {
+    a: 42,
+    foo: foo
+  };
+  
+  var obj1 = {
+    a: 2,
+    obj2: obj2
+  };
+  
+  obj1.obj2.foo();
+  ```
+
+
+  隐式丢失问题
+
+  被隐式绑定的函数会丢失绑定对象, 会应用默认绑定, 从而把`this`绑定到全局对象或者`undefined`
+
+  ```javascript
+  function foo() {
+    console.log(this.a);
+  }
+  
+  var obj = {
+    a: 2,
+    foo: foo
+  };
+  
+  var bar = obj.foo;
+  
+  var a = "oops, global";
+  
+  bar();	// "oops, global"
+  ```
+
+  ```javascript
+  function foo() {
+    console.log(this.a);
+  }
+  
+  function doFoo(fn) {
+    fn();
+  }
+  
+  var obj = {
+    a: 2,
+    foo: foo
+  };
+  
+  var a = "oops, global";
+  
+  doFoo(obj.foo);	// oops, global
+  ```
+
+  
+
+  调用回调函数可能会修改`this`
+
+- 显式绑定
+  用`call`或者`apply`进行显式绑定
+  显式绑定仍然无法解决绑定丢失的问题
+
+  1. 硬绑定
+
+     ```javascript
+     function foo() {
+       console.log(this.a);
+     }
+     
+     var obj = {
+       a: 2
+     };
+     
+     var bar = function() {
+       foo.call(obj);
+     };
+     
+     bar();	// 2
+     setTimeout(bar, 100); // 2
+     
+     // 硬绑定的bar不可能在修改他的this
+     bar.call(window);
+     ```
+
+     应用场景:
+
+     ```javascript
+     /**
+      * 创建一个包裹函数, 负责接收参数并且返回值
+      */
+     function foo(something) {
+       console.log(this.a, something);
+       return this.a + something;
+     }
+     
+     var obj = {
+       a: 2
+     };
+     
+     var bar = function() {
+       return foo.apply(obj, arguments);
+     };
+     
+     var b = bar(3);	// 2 3
+     console.log(b);	// 5
+     ```
+
+     ```javascript
+     /**
+      * 创建一个可以重复使用的辅助函数
+      */
+     function foo(something) {
+       console.log(this.a, something);
+       return this.a + something;
+     }
+     
+     function bind(fn, obj) {
+       return function () {
+       	return fn.apply(obj, arguments);
+       };
+     }
+     
+     var obj = {
+       a: 2
+     };
+     
+     var bar = bind(foo, obj);
+     
+     var b = bar(3);	// 2 3
+     
+     console.log(b);	// 5
+     ```
+
+  2. `API`调用的上下文
+
+- new绑定
+  构造函数只是一些使用new操作符时被调用的函数, 并不会属于某个类, 也不会实例化一个类
+
+  用new来代用函数会自动执行下面的操作:
+
+  1. 创建一个全新的对象
+
+  2. 这个对象会被执行`[[Prototype]]`连接
+  3. 这个新对象会绑定到函数调用的`this`
+  4. 如果函数没有返回其他对象, 那么`new`表达式中的函数调用会自动返回这个新对象
+
+
+
+优先级
+
+默认绑定优先级最低
+
+隐式绑定和显式绑定比较
+
+```javascript
+function foo() {
+  console.log(this.a);
+}
+
+var obj1 = {
+  a: 2,
+  foo: foo
+};
+
+var obj2 = {
+  a: 3,
+  foo: foo
+};
+
+obj1.foo();	// 2
+obj2.foo();	// 3
+
+obj1.foo.call(obj2);	// 3
+obj2.foo.call(obj1);	// 2
+// 显式绑定优先级高于隐式绑定
+```
+
+`new`绑定和隐式绑定比较
+
+```javascript
+function foo(something) {
+	this.a = something;
+}
+
+var obj1 = {
+  foo: foo
+};
+
+obj1.foo(2);
+console.log(obj1.a);	// 2
+
+obj1.foo.call(obj2, 3);	
+console.log(obj2.a);	// 3
+
+var bar = new obj1.foo(4);
+console.log(obj1.a);	// 2
+console.log(bar.a);	// 4
+// new绑定优先级高于隐式绑定
+```
+
+`new`绑定和显式绑定比较
+
+```javascript
+function foo(something) {
+	this.a = something;
+}
+
+var obj1 = {};
+
+var bar = foo.bind(obj1);
+bar(2);
+console.log(obj1.a);	// 2
+
+var baz = new bar(3);
+console.log(obj1.a);	// 2
+console.log(baz.a);	// 3
+```
+
+`bind`会判断硬绑定函数是否是被`new`调用, 如果是的话就会使用新创建的`this`替换硬绑定的`this`
+
+
+
+判断`this`
+
+1. 函数是否在`new`中调用(`new`绑定)? 如果是的话`this`绑定的是新创建的对象
+
+   `var bar = new foo();`
+
+2. 函数是否通过`call`, `apply`(显式调用)或者硬绑定调用? 如果是的话, `this`绑定的是指定对象
+   `var bar = foo.call(obj2);`
+
+3. 函数是否在某个上下文对象中调用(隐式绑定)? 如果是的话, `this`绑定的是那个上下文对象
+   `var bar = obj1.foo();`
+
+4. 如果都不是的话, 使用默认绑定, 严格模式 -> `undefined`, 否则是`window`对象
+
+   `var bar = foo();`
+
+
+
+例外: 
+
+- 传入`null`或者`undefined`作为`this`的绑定对象传入`call`, `apply`或者`bind`, 这些值在调用的时候会被忽略, 应用默认绑定
+  传入`null`或`undefined`可能会导致副作用 -> 利用空的委托对象替代`var a = Object.create(null);`
+  `Object.create(null)`和`{}`很像, 但是不会创建`Object.prototype`这个委托
+
+- 间接引用
+
+  ```javascript
+  var a = 2;
+  var o = {a: 3, foo: foo};
+  var p = {a: 4};
+  
+  o.foo();	// 3
+  (p.foo = o.foo)();	// 2
+  ```
+
+
+
+软绑定
+
+```javascript
+if (!Function.prototype.softBind) {
+  Function.prototype.softBind = function (obj) {
+    var fn = this;
+    var curried = [].slice.call(arguments, 1);
+    var bound = function() {
+      return fn.apply(
+      	(!this || this === (window || global)) ? obj : this,
+        curried.cocat.apply(curried, arguments)
+      );
+    }
+    bound.prototype = Object.create(fn.prototype);
+    return bound;
+  }
+}
+```
+
+
+
+箭头函数
+
+箭头函数不使用四种标准规则, 根据外层(函数或全局)作用域来决定`this`
+
+箭头函数的`this`指向无法修改, `new`操作符也无法修改
+
+```javascript
+function foo() {
+	setTimeout(() => {
+    console.log(this.a);
+  }, 100);
+}
+
+var obj = {
+  a: 2
+};
+
+foo.call(obj);	// 2
+```
+
+1. 只使用词法作用域并完全抛弃错误`this`风格的代码
+2. 完全采用`this`风格, 并在必要时使用`bind(...)`, 尽量避免使用`self = this`和箭头函数
+
+
+
+# 对象
+

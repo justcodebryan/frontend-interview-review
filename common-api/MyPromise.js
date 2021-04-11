@@ -11,28 +11,28 @@ class MyPromise {
     this.value = undefined;
     this.reason = undefined;
 
-    let resolve = (value) => {
-      if (this.status === PENDING) {
-        this.status = FULFILLED;
-        this.value = value;
-        this.fulfilledFnQueue.forEach((cb) => cb(this.value));
-      }
-    };
-
-    let reject = (reason) => {
-      if (this.status === PENDING) {
-        this.status = REJECTED;
-        this.reason = reason;
-        this.rejectedFnQueue.forEach((cb) => cb(this.reason));
-      }
-    };
-
     try {
-      callback(resolve, reject);
+      callback(this.resolve, this.reject);
     } catch (error) {
       this.reject(error);
     }
   }
+
+  resolve = (value) => {
+    if (this.status === PENDING) {
+      this.status = FULFILLED;
+      this.value = value;
+      this.fulfilledFnQueue.forEach((cb) => cb(this.value));
+    }
+  };
+
+  reject = (reason) => {
+    if (this.status === PENDING) {
+      this.status = REJECTED;
+      this.reason = reason;
+      this.rejectedFnQueue.forEach((cb) => cb(this.reason));
+    }
+  };
 
   then(onFulfilled, onRejected) {
     onFulfilled = isFunction(onFulfilled) ? onFulfilled : (v) => v;

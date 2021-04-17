@@ -76,6 +76,7 @@ function App() {
         <Link to='/ComB' />
         <br />
         <br />
+        
         <Router>
           <Route path='/'>
             <div>index</div>

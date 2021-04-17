@@ -2,70 +2,50 @@ import React, { useContext, useState } from 'react';
 import './App.css';
 
 const defaultContext = {
-  currPath: '/',
-  prevPath: '/',
-  pathDispatch: () => { }
+  currPath: '#/',
+  prevPath: '#/',
+  historyDispatch: () => {},
 };
 
 const HistoryContext = React.createContext(defaultContext);
 
-const Router = ({ children }) => {
-  const [history, setHistory] = useState({
-    currPath: '/',
-    prevPath: '/',
-    pathDispatch: (data) => {
-      setHistory({
-        ...data,
-        pathDispatch
-      });
-    }
-  });
-
-  const pathDispatch = (data) => {
-    setHistory({
-      ...data,
-      pathDispatch
-    });
-  };
-
-  return (
-    <HistoryContext.Provider value={{ ...history, pathDispatch }}>
-      {children}
-    </HistoryContext.Provider>
-  );
-};
-
-const Route = ({
-  path,
-  children
-}) => {
+const Route = ({ path, children }) => {
   const context = useContext(HistoryContext);
 
-  console.log('path -> ', path);
+  const { currPath } = context;
 
-  return path === context.currPath ? children : null;
+  return path === currPath.slice(1) ? <>{children}</> : null;
 };
 
-const Link = ({
-  to,
-  children
-}) => {
+const Link = ({ to, children }) => {
   const context = useContext(HistoryContext);
+
+  const { historyDispatch } = context;
 
   const onClick = (e) => {
     e.preventDefault();
     const prevPath = window.location.hash;
-    window.location.hash = to;
+    const currPath = `#${to}`;
+    window.location.hash = currPath;
+
+    console.log('currPath -> ', currPath);
     console.log('prevPath -> ', prevPath);
-    console.log('currPath -> ', window.location.hash);
-    console.log(context);
-    context.pathDispatch({
-      currPath: to,
-      prevPath
+
+    historyDispatch({
+      currPath,
+      prevPath,
     });
   };
 
-  return <a href={to} onClick={onClick}>{children || to}</a>;
+  return (
+    <a href={to} onClick={onClick}>
+      {children || to}
+    </a>
+  );
+};
+
+const Router = ({ children }) => {
+  return <div>{children}</div>;
 };
 
 const ComA = () => {
@@ -77,18 +57,38 @@ const ComB = () => {
 };
 
 function App() {
-  return (
-    <div className="App">
-      <Link to='/' /><br />
-      <Link to='/ComA' /><br />
-      <Link to='/ComB' /><br />
+  const [history, setHistory] = useState(defaultContext);
 
-      <Router>
-        <Route path='/'><div>index</div></Route>
-        <Route path='/ComA'><ComA /></Route>
-        <Route path='/ComB'><ComB /></Route>
-      </Router>
-    </div>
+  const historyDispatch = (data) => {
+    setHistory({
+      ...data,
+      historyDispatch,
+    });
+  };
+
+  return (
+    <HistoryContext.Provider value={{ ...history, historyDispatch }}>
+      <div className='App'>
+        <Link to='/' />
+        <br />
+        <Link to='/ComA' />
+        <br />
+        <Link to='/ComB' />
+        <br />
+        <br />
+        <Router>
+          <Route path='/'>
+            <div>index</div>
+          </Route>
+          <Route path='/ComA'>
+            <ComA />
+          </Route>
+          <Route path='/ComB'>
+            <ComB />
+          </Route>
+        </Router>
+      </div>
+    </HistoryContext.Provider>
   );
 }
 

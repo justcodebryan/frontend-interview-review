@@ -1,7 +1,7 @@
 function MyObjectFactory() {
   const obj = new Object();
 
-  Constructor = [].shift.call(arguments);
+  let Constructor = [].shift.call(arguments);
 
   obj.__proto__ = Constructor.prototype;
 

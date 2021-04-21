@@ -9,6 +9,13 @@ const defaultContext = {
 
 const HistoryContext = React.createContext(defaultContext);
 
+/**
+ *
+ * 用Context去当前的路径和前一个路径
+ * 如果当前路径和Route的路径相同 -> 渲染组件
+ * 当前路径和Route的路径不同 -> 不渲染组件
+ *
+ * */
 const Route = ({ path, children }) => {
   const context = useContext(HistoryContext);
 
@@ -17,6 +24,13 @@ const Route = ({ path, children }) => {
   return path === currPath.slice(1) ? <>{children}</> : null;
 };
 
+/**
+ *
+ * 包装a标签
+ * 将prevPath和currPath放到Context里面
+ * 跳转对应的路径
+ *
+ * */
 const Link = ({ to, children }) => {
   const context = useContext(HistoryContext);
 
@@ -44,8 +58,13 @@ const Link = ({ to, children }) => {
   );
 };
 
+/**
+ *
+ * 承载所有的Route的组件
+ *
+ * */
 const Router = ({ children }) => {
-  return <div>{children}</div>;
+  return <>{children}</>;
 };
 
 const ComA = () => {
@@ -76,7 +95,7 @@ function App() {
         <Link to='/ComB' />
         <br />
         <br />
-        
+
         <Router>
           <Route path='/'>
             <div>index</div>

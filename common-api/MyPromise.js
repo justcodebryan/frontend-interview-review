@@ -22,7 +22,7 @@ class MyPromise {
     if (this.status === PENDING) {
       this.status = FULFILLED;
       this.value = value;
-      this.fulfilledFnQueue.forEach((cb) => cb(this.value));
+      this.fulfilledFnQueue.forEach((cb) => cb());
     }
   };
 
@@ -30,13 +30,13 @@ class MyPromise {
     if (this.status === PENDING) {
       this.status = REJECTED;
       this.reason = reason;
-      this.rejectedFnQueue.forEach((cb) => cb(this.reason));
+      this.rejectedFnQueue.forEach((cb) => cb());
     }
   };
 
-  then(onFulfilled, onRejected) {
+  then = (onFulfilled, onRejected) => {
     onFulfilled = isFunction(onFulfilled) ? onFulfilled : (v) => v;
-    onRejected = isFunction(onRejected) ? onRejected : (r) => Error(r);
+    onRejected = isFunction(onRejected) ? onRejected : (r) => throw Error(r);
 
     if (this.status === PENDING) {
       this.fulfilledFnQueue.push(onFulfilled);
@@ -50,6 +50,70 @@ class MyPromise {
     if (this.status === REJECTED) {
       onRejected(this.reason);
     }
+  }
+  
+  static resolve(value) {
+    return new MyPromise((resolve, reject) => {
+      resolve(value);
+    });
+  }
+
+  static reject(reason) {
+    return new MyPromise((resolve, reject) => {
+      reject(reason);
+    });
+  }
+
+  static all(iterableObj) {
+    if (!Array.isArray(iterableObj)) {
+      const type = typeof iterableObj;
+      console.log(`TypeError: Type ${type} is not an iterable object`);
+      return;
+    }
+
+    return new MyPromise((resolve, reject) => {
+      const resArr = [];
+      let orderIndex = 0;
+      const len = iterableObj.length;
+
+      const checkList = (res, index) => {
+        resArr[index] = res;
+
+        if (++orderIndex === len) {
+          resolve(resArr);
+        }
+      };
+
+      for (let i = 0; i < len; i++) {
+        const obj = iterableObj[i];
+        if (obj && typeof obj.then === 'function') {
+          obj.then((res) => {
+            checkList(res, i);
+          }, reject);
+        } else {
+          checkList(obj, i);
+        }
+      }
+    });
+  }
+
+  static race(iterableObj) {
+    if (!Array.isArray(iterableObj)) {
+      const type = typeof iterableObj;
+      console.log(`TypeError: Type ${type} is not an iterable object`);
+      return;
+    }
+
+    return new Promise((resolve, reject) => {
+      for (let i = 0; i < len; i++) {
+        const obj = iterableObj[i];
+        if (obj && typeof obj.then === 'function') {
+          obj.then(resolve, reject);
+        } else {
+          resolve(obj);
+        }
+      }
+    });
   }
 }
 

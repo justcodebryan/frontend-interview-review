@@ -1,5 +1,62 @@
 import { ChangeEvent } from 'react';
 
+export async function getImageSize(
+  url: string,
+  width: number,
+  height: number,
+  needImage: boolean = false
+) {
+  // 获取图片链接地址
+  // const URL = window.URL || window.webkitURL;
+  // 在内存中创建一个图片对象
+  let img = new Image();
+  img.src = url;
+  // 解决跨域问题
+  img.crossOrigin = 'anonymous';
+  return new Promise((resolve, reject) => {
+    // 用图片对象去加载链接
+    img.onload = () => {
+      const imageInfo = { width: img.naturalWidth, height: img.naturalHeight };
+      if (needImage) {
+        resolve({...imageInfo, img});
+      } else {
+        img = null;
+        resolve(imageInfo);
+      }
+    };
+    img.onerror = e => reject(e);
+  });
+}
+
+function checkFileSize(
+  file: RcFile,
+  width: number,
+  height: number
+) {
+  return new Promise((resolve, reject) => {
+    const URL = window.URL || window.webkitURL;
+    const img = new Image();
+    img.onload = () => {
+      let valid = img.width === width && img.height === height;
+
+      if (valid) {
+        resolve(true);
+      } else {
+        reject(false);
+      }
+    };
+    img.src = URL.createObjectURL(file);
+  }).then(
+    () => {
+      return file;
+    },
+    () => {
+      message.error(`请上传图片尺寸宽度为 ${width}px 的图片。`);
+      return Upload.LIST_IGNORE;
+    }
+  );
+}
+
 export function getValueOnlyFromEvent(
   event: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
 ) {
@@ -75,3 +132,4 @@ export function getEngAndNumFromEvent(
 ) {
   return event.target.value.trim().replace(/[^\d|chun]/g, '');
 }  
+

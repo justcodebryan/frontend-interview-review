@@ -1,17 +1,18 @@
 interface IPullRefreshConfig {
-  ele?: HTMLElement;
+  ele?: HTMLElement | null;
   enabled?: boolean;
   refreshListener?: () => void;
   refreshStyleConfig?: Record<string, string>;
 }
 
 enum PullDirection {
-  UNKONW,
+  UNKNOWN,
   DOWN,
   UP
 }
 
 function defaultRefreshListener() {
+  // eslint-disable-next-line no-restricted-globals
   location.reload();
 }
 
@@ -41,26 +42,25 @@ export default class PullRefreshFactory {
     startY: 0,
     endX: 0,
     endY: 0,
-    direction: PullDirection.UNKONW,
+    direction: PullDirection.UNKNOWN,
     scrollOnTop: true
   };
 
-  loading: boolean =  false;
+  loading: boolean = false;
 
   refreshContainer: HTMLElement | null = null;
 
-  timer: NodeJS.Timeout | null;
+  timer: NodeJS.Timeout | undefined;
 
   refreshStyleConfig: Record<string, string> = defaultRefreshStyleConfig;
 
   setEnabled(flag: boolean) {
-    this.enabled = false;
+    this.enabled = flag;
     (window as any).setPullRefreshEnabled(flag);
   }
 
   setRefreshListener(fn: any) {
     this.refreshListener = fn;
-    // console.log(this, 99999);
   }
 
   setLoading(flag: boolean) {
@@ -78,7 +78,7 @@ export default class PullRefreshFactory {
 
   initTouchStart() {
     const _self = this;
-    _self.ele.addEventListener('touchstart', function(event: TouchEvent) {
+    _self.ele.addEventListener('touchstart', function (event: TouchEvent) {
       if (!_self.enabled) return;
 
       Object.assign(_self.position, {
@@ -91,7 +91,7 @@ export default class PullRefreshFactory {
 
   initTouchMove() {
     const _self = this;
-    _self.ele.addEventListener('touchmove', function(event: TouchEvent) {
+    _self.ele.addEventListener('touchmove', function (event: TouchEvent) {
       const { startX, startY, scrollOnTop } = _self.position;
       const offsetX = event.touches[0].pageX - startX;
       const offsetY = event.touches[0].pageY - startY;
@@ -101,37 +101,32 @@ export default class PullRefreshFactory {
       } else if (offsetY < 0 && Math.abs(offsetY) > Math.abs(offsetX)) {
         _self.position.direction = PullDirection.UP;
       } else {
-        _self.position.direction = PullDirection.UNKONW;
+        _self.position.direction = PullDirection.UNKNOWN;
       }
 
-      if (
-        !_self.enabled ||
-        _self.loading || 
-        !scrollOnTop || 
-        _self.position.direction || 
-        !== PullDirection.DOWN
-      ) return;
+      if (!_self.enabled || _self.loading || !scrollOnTop || _self.position.direction !== PullDirection.DOWN) return;
 
       console.log('到达下拉阈值: ', offsetY);
-      
+
       _self.setLoading(true);
       Object.assign(_self.ele.style, {
         transform: 'translate3d(0, 100px, 0)',
         transition: 'all ease .5s'
       });
 
-      (_self.refreshContainer as HTMLElement).innerHTML = '下拉刷新内容...'
+      (_self.refreshContainer as HTMLElement).innerHTML = '下拉刷新内容...';
     });
   }
 
   initTouchEnd() {
     const _self = this;
-    _self.ele.addEventListener('touchend', function(event: TouchEvent) {
+    _self.ele.addEventListener('touchend', function (event: TouchEvent) {
       if (!_self.enabled) return;
+
       const { scrollOnTop, direction } = _self.position;
-      if (!scrollOnTop || this.dir !== PullDirection.DOWN || !self.loading) return;
+      if (!scrollOnTop || direction !== PullDirection.DOWN || !_self.loading) return;
       (_self.refreshContainer as HTMLElement).innerHTML = '<div class="refresh-icon"></div>';
-      _self.timer = setTimeout(function() {
+      _self.timer = setTimeout(function () {
         if (_self.timer) clearTimeout(_self.timer);
         (_self.refreshContainer as HTMLElement).innerHTML = '';
         Object.assign(_self.ele.style, {
@@ -139,7 +134,7 @@ export default class PullRefreshFactory {
           transition: 'all cubic-bezier(.21, 1.93, .53, .64) .5s'
         });
         _self.setLoading(false);
-        _self.position.direction = PullDirection.UNKONW;
+        _self.position.direction = PullDirection.UNKNOWN;
         setTimeout(() => {
           _self.refreshListener();
           setTimeout(() => {
@@ -148,7 +143,7 @@ export default class PullRefreshFactory {
               transition: ''
             });
           }, 500);
-        })
+        });
       }, 1000);
     });
   }
@@ -175,7 +170,7 @@ export default class PullRefreshFactory {
         text-align: center;
         left: 0;
         top: 0;
-        backgound-color: ${this.refreshStyleConfig.backgroundColor};
+        background-color: ${this.refreshStyleConfig.backgroundColor};
         transform: translate3d(0, -100px, 0);
       }
 
@@ -214,10 +209,10 @@ export default class PullRefreshFactory {
   }
 
   init() {
-    (window as any).setPullRefreshEnabled = function(flag: boolean) {
+    (window as any).setPullRefreshEnabled = function (flag: boolean) {
       (window as any).__pull_refresh_enabled__ = flag;
     };
-    
+
     this.setEnabled(true);
     this.initRefreshStyle();
     this.initRefreshContainer();

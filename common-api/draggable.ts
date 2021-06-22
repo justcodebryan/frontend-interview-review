@@ -1,9 +1,9 @@
 const raf = window.requestAnimationFrame;
-const MOVE_ANIM_INTER = 200;
+const MOVE_ANIM_INTER = 50;
 
-export default function draggable(ele: HTMLElement, adsorb = { x: 20, y: 80 }) {
+export default function draggable(ele: HTMLDivElement) {
   if (!ele) {
-    throw new Error('必须是可拖拽的元素');
+    throw new Error('Input element must be draggable!');
   }
 
   let startX = 0;
@@ -12,8 +12,10 @@ export default function draggable(ele: HTMLElement, adsorb = { x: 20, y: 80 }) {
   let left = 0;
   let top = 0;
 
-  const cw = document.documentElement.clientWidth;
-  const ch = document.documentElement.clientHeight;
+  let rafID: number;
+
+  const clientWidth = document.documentElement.clientWidth;
+  const clientHeight = document.documentElement.clientHeight;
 
   const { width, height } = ele.getBoundingClientRect();
 
@@ -27,6 +29,7 @@ export default function draggable(ele: HTMLElement, adsorb = { x: 20, y: 80 }) {
       left = ele.offsetLeft;
 
       event.preventDefault();
+      event.stopPropagation();
     },
     false
   );
@@ -43,39 +46,39 @@ export default function draggable(ele: HTMLElement, adsorb = { x: 20, y: 80 }) {
       ele.style.bottom = 'auto';
 
       event.preventDefault();
+      event.stopPropagation();
     },
     false
   );
 
   function touchDone(event: TouchEvent) {
-    const dx = event.changedTouches[0].pageX - startX;
-    const dy = event.changedTouches[0].pageY - startY;
+    const deltaX = event.changedTouches[0].pageX - startX;
+    const deltaY = event.changedTouches[0].pageY - startY;
 
-    const ty = top + dy;
-    const tx = left + dx;
+    const totalX = left + deltaX;
+    const totalY = top + deltaY;
 
-    ele.style.top = `${ty}px`;
-    ele.style.left = `${tx}px`;
+    ele.style.left = `${totalX}px`;
+    ele.style.top = `${totalY}px`;
     ele.style.right = 'auto';
     ele.style.bottom = 'auto';
 
-    const adsorb_safe_x = cw - width - adsorb.x;
-    const adsorb_safe_y = ch - height - adsorb.y;
+    if (rafID) cancelAnimationFrame(rafID);
 
-    raf(() => {
-      let nx;
-      let ny = ty;
+    rafID = raf(() => {
+      let nowX = totalX;
+      let nowY = totalY;
 
-      if (tx + width / 2 < cw / 2) {
-        nx = adsorb.x;
-      } else {
-        nx = adsorb_safe_x;
+      if (nowX + width / 2 > clientWidth) {
+        nowX = clientWidth - width;
+      } else if (nowX + width / 2 < 0) {
+        nowX = 0;
       }
 
-      if (ty < adsorb.y) {
-        ny = adsorb.y;
-      } else if (ty > adsorb_safe_y) {
-        ny = adsorb_safe_y;
+      if (nowY + height / 2 > clientHeight) {
+        nowY = clientHeight - height;
+      } else if (nowY - height / 2 < 0) {
+        nowY = 0;
       }
 
       ele.style.webkitTransition = `left ${MOVE_ANIM_INTER}ms ease-in-out, top ${MOVE_ANIM_INTER}ms ease-in-out`;
@@ -89,8 +92,8 @@ export default function draggable(ele: HTMLElement, adsorb = { x: 20, y: 80 }) {
 
       ele.addEventListener('webkitTransitionEnd', onAnimationDone, false);
       ele.addEventListener('transitionend', onAnimationDone, false);
-      ele.style.top = `${ny}px`;
-      ele.style.left = `${nx}px`;
+      ele.style.top = `${nowY}px`;
+      ele.style.left = `${nowX}px`;
     });
   }
 

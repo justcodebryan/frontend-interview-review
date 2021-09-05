@@ -1,4 +1,4 @@
-import { isArray } from './utils';
+import { isArray } from '../utils/index.js';
 
 function MyApply(thisArgs, argsArray) {
   let context = thisArgs || globalThis;

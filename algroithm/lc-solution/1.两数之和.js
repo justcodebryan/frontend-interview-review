@@ -10,21 +10,34 @@
  * @param {number} target
  * @return {number[]}
  */
-var twoSum = function(nums, target) {
+var twoSum = function (nums, target) {
   const map = new Map();
 
   for (let i = 0; i < nums.length; i++) {
-    map.set(nums[i], i);
-  }
-
-  for (let i = 0; i < nums.length; i++) {
-    let remain = target - nums[i];
-    if (map.has(remain) && map.get(remain) !== i) {
-      return [i, map.get(remain)];
+    let k = target - nums[i];
+    if (map.has(k)) {
+      return [i, map.get(k)];
     }
+    map.set(nums[i], i);
   }
 
   return [];
 };
 // @lc code=end
 
+// var twoSum = function(nums, target) {
+//   const map = new Map();
+
+//   for (let i = 0; i < nums.length; i++) {
+//     map.set(nums[i], i);
+//   }
+
+//   for (let i = 0; i < nums.length; i++) {
+//     let remain = target - nums[i];
+//     if (map.has(remain) && map.get(remain) !== i) {
+//       return [i, map.get(remain)];
+//     }
+//   }
+
+//   return [];
+// };

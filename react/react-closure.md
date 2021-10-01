@@ -2,15 +2,15 @@
 
 ```jsx
 // App.js
-import React, { useState, useEffect } from "react";
-import "./styles.css";
+import React, { useState, useEffect } from 'react';
+import './styles.css';
 
 export default function App() {
   const [count, setCount] = useState(0);
 
   useEffect(() => {
     setTimeout(() => {
-      console.log("count in Timeout -> ", count);
+      console.log('count in Timeout -> ', count);
     }, 5000);
   }, []);
 
@@ -28,32 +28,32 @@ export default function App() {
 
 ```jsx
 // index.js
-import React from "react";
-import ReactDOM from "react-dom";
+import React from 'react';
+import ReactDOM from 'react-dom';
 
-import App from "./App";
+import App from './App';
 
-const rootElement = document.getElementById("root");
+const rootElement = document.getElementById('root');
 ReactDOM.render(
   <React.StrictMode>
     <App />
   </React.StrictMode>,
-  rootElement
+  rootElement,
 );
 ```
 
 # 解决方案
 
 ```jsx
-import React, { useEffect } from "react";
-import "./styles.css";
+import React, { useEffect } from 'react';
+import './styles.css';
 
 let count = 0;
 
 export default function App() {
   useEffect(() => {
     setTimeout(() => {
-      console.log("count in Timeout -> ", count);
+      console.log('count in Timeout -> ', count);
     }, 5000);
   }, []);
 

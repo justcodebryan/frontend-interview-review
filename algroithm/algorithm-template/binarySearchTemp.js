@@ -22,7 +22,7 @@ const binarySearch = function (nums, target) {
     let mid = ((right - left) >> 1) + left;
     if (nums[mid] === target) {
       return mid;
-    } else if (nums[mid] > target) {
+    } else if (nums[mid] < target) {
       left = mid + 1;
     } else {
       right = mid - 1;

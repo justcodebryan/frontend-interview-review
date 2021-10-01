@@ -1,55 +1,138 @@
-// MyPromise
-const PENDING = "pending";
-const FULFILLED = "fulfilled";
-const REJECTED = "rejected";
+const PENDING = 'pending';
+const FULFILLED = 'fulfilled';
+const REJECTED = 'rejected';
+
+function isFunction (target) {
+  return typeof target === 'function';
+}
+
+const resolvePromise = (promise2, x, resolve, reject) => {
+  if (x === promise2) {
+    return reject(new TypeError('Chaining cycle detected for promise #<Promise>'));
+  }
+
+  let called = false;
+  if ((typeof x === 'object' && x !== null) || typeof x === 'function') {
+    try {
+      let then = x.then;
+      if (typeof then === 'function') {
+        then.call(
+          x,
+          (y) => {
+            if (called) return;
+            called = true;
+
+            resolvePromise(promise2, y, resolve, reject);
+          },
+          (r) => {
+            if (called) return;
+            called = true;
+
+            reject(r);
+          }
+        );
+      } else {
+        resolve(x);
+      }
+    } catch (e) {
+      if (called) return;
+      called = true;
+
+      reject(e);
+    }
+  } else {
+    resolve(x);
+  }
+};
 
 class MyPromise {
-  constructor(callback) {
+  constructor(executor) {
     this.status = PENDING;
-    this.fulfilledFnQueue = [];
-    this.rejectedFnQueue = [];
+    this.resolvedCallbacks = [];
+    this.rejectedCallbacks = [];
     this.value = undefined;
     this.reason = undefined;
 
     let resolve = (value) => {
       if (this.status === PENDING) {
-        this.status = FULFILLED;
         this.value = value;
-        this.fulfilledFnQueue.forEach((cb) => cb(this.value));
+        this.status = FULFILLED;
+        this.resolvedCallbacks.forEach((cb) => cb());
       }
     };
 
     let reject = (reason) => {
       if (this.status === PENDING) {
-        this.status = REJECTED;
         this.reason = reason;
-        this.rejectedFnQueue.forEach((cb) => cb(this.reason));
+        this.status = REJECTED;
+        this.rejectedCallbacks.forEach((cb) => cb());
       }
     };
 
     try {
-      callback(resolve, reject);
-    } catch (error) {
-      this.reject(error);
+      executor(resolve, reject);
+    } catch (e) {
+      reject(e);
     }
   }
 
   then (onFulfilled, onRejected) {
     onFulfilled = isFunction(onFulfilled) ? onFulfilled : (v) => v;
-    onRejected = isFunction(onRejected) ? onRejected : (r) => Error(r);
+    onRejected = isFunction(onRejected)
+      ? onRejected
+      : (r) => {
+        throw r;
+      };
 
-    if (this.status === PENDING) {
-      this.fulfilledFnQueue.push(onFulfilled);
-      this.rejectedFnQueue.push(onRejected);
-    }
+    let promise2 = new MyPromise((resolve, reject) => {
+      if (this.status === FULFILLED) {
+        setTimeout(() => {
+          try {
+            let x = onFulfilled(this.value);
+            resolvePromise(promise2, x, resolve, reject);
+          } catch (e) {
+            reject(e);
+          }
+        }, 0);
+      }
 
-    if (this.status === FULFILLED) {
-      onFulfilled(this.value);
-    }
+      if (this.status === REJECTED) {
+        setTimeout(() => {
+          try {
+            let x = onRejected(this.reason);
+            resolvePromise(promise2, x, resolve, reject);
+          } catch (e) {
+            reject(e);
+          }
+        }, 0);
+      }
 
-    if (this.status === REJECTED) {
-      onRejected(this.reason);
-    }
+      if (this.status === PENDING) {
+        this.resolvedCallbacks.push(() => {
+          setTimeout(() => {
+            try {
+              let x = onFulfilled(this.value);
+              resolvePromise(promise2, x, resolve, reject);
+            } catch (e) {
+              reject(e);
+            }
+          }, 0);
+        });
+
+        this.rejectedCallbacks.push(() => {
+          setTimeout(() => {
+            try {
+              let x = onRejected(this.reason);
+              resolvePromise(promise2, x, resolve, reject);
+            } catch (e) {
+              reject(e);
+            }
+          }, 0);
+        });
+      }
+    });
+
+    return promise2;
   }
 
   static all (arr) {
@@ -85,27 +168,13 @@ class MyPromise {
   }
 }
 
-function isFunction (target) {
-  return typeof target === "function";
-}
+MyPromise.defer = MyPromise.deferred = function () {
+  let dfd = {};
+  dfd.promise = new MyPromise((resolve, reject) => {
+    dfd.resolve = resolve;
+    dfd.reject = reject;
+  });
+  return dfd;
+};
 
-function isPromise (target) {
-  return Object.prototype.hasOwnProperty.call(target, 'then');
-}
-
-console.log("===========TEST===========");
-let p1 = new MyPromise((resolve, reject) => {
-  resolve("resolved");
-  console.log("constructor");
-}).then((res) => {
-  console.log(res);
-});
-
-console.log("===========REAL PROMISE===========");
-const p = new Promise((resolve, reject) => {
-  resolve("resolved");
-  console.log("constructor");
-}).then((res) => {
-  console.log(res);
-});
-console.log(p);
+module.exports = MyPromise;

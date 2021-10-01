@@ -1,5 +1,4 @@
 // MyInstanceOf
-// TODO
 function MyInstanceOf(L, R) {
   const proto = L.__proto__;
   while (R) {
@@ -15,7 +14,6 @@ function Creator(age) {
 
 const obj = [];
 const obj1 = new Creator(10);
-console.log("obj -> Array", obj instanceof Array);
-console.log("obj -> Creator", MyInstanceOf(obj, Creator));
-console.log("obj1 -> Creator", MyInstanceOf(obj1, Creator));
-console.log("obj1 -> Creator", obj1 instanceof Creator);
+console.log("obj -> Array", MyInstanceOf(obj, Array), obj instanceof Array);
+console.log("obj -> Creator", MyInstanceOf(obj, Creator), obj instanceof Creator);
+console.log("obj1 -> Creator", MyInstanceOf(obj1, Creator), obj1 instanceof Creator);

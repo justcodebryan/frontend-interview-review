@@ -2,26 +2,45 @@ const PENDING = 'pending';
 const FULFILLED = 'fulfilled';
 const REJECTED = 'rejected';
 
-function isFunction (target) {
-  return typeof target === 'function';
-}
-
+/**
+ * 
+ * @param {*} promise2 链式调用生成的第二个promise
+ * @param {*} x 当前需要处理的promise或者对象
+ * @param {*} resolve 当promise被resolve的时候调用的函数
+ * @param {*} reject 当promise被reject的时候调用的函数
+ * @returns 
+ */
+// 处理Promise的过程
 const resolvePromise = (promise2, x, resolve, reject) => {
+  // 当x和promise2是同一个对象的时候
+  // 抛出TypeError
   if (x === promise2) {
     return reject(new TypeError('Chaining cycle detected for promise #<Promise>'));
   }
 
+  // 确保当前的promise只被调用一次
+  // 维护一个变量去判断当前的函数是否被调用
   let called = false;
+  // 判断当前需要进行处理的参数是否是一个对象或者函数
   if ((typeof x === 'object' && x !== null) || typeof x === 'function') {
     try {
+      // 首先将x.then存起来
+      // 确保对象的then被改变的时候还能拿到最开始的那个then属性
       let then = x.then;
+      // 如果then是一个函数的话
+      // 在x的context下进行调用
       if (typeof then === 'function') {
+        // then是一个双参函数
+        // 第一个参数是resolve, 第二个参数是reject
         then.call(
           x,
           (y) => {
             if (called) return;
             called = true;
 
+            // 此处因为可能返回依旧是一个promise
+            // 递归调用
+            // 直到最后得到结果
             resolvePromise(promise2, y, resolve, reject);
           },
           (r) => {
@@ -32,6 +51,8 @@ const resolvePromise = (promise2, x, resolve, reject) => {
           }
         );
       } else {
+        // 在取x中的then属性的时候报错了
+        // 此时无论结果, 直接进行resolve
         resolve(x);
       }
     } catch (e) {
@@ -41,6 +62,7 @@ const resolvePromise = (promise2, x, resolve, reject) => {
       reject(e);
     }
   } else {
+    // 如果当前元素不是对象直接resolve出去
     resolve(x);
   }
 };
@@ -77,8 +99,8 @@ class MyPromise {
   }
 
   then (onFulfilled, onRejected) {
-    onFulfilled = isFunction(onFulfilled) ? onFulfilled : (v) => v;
-    onRejected = isFunction(onRejected)
+    onFulfilled = typeof onFulfilled === 'function' ? onFulfilled : (v) => v;
+    onRejected = typeof onRejected === 'function'
       ? onRejected
       : (r) => {
         throw r;

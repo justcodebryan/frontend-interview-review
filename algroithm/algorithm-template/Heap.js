@@ -136,6 +136,8 @@ class Heap {
    * @returns 
    */
   peek() {
+    // 如果是最小堆的话, 获取堆顶元素就是最小值
+    // 如果是最大堆的话, 获取堆顶元素就是最大值
     if (this.size()) return this.container[0];
     return null;
   }

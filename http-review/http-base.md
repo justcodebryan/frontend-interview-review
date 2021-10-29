@@ -247,7 +247,7 @@ note left Browser: 检查响应头是否允许跨域信息, 如果不允许, 浏
 
 复杂请求:
 
-1. `PUT`, `Delete`方法的`ajax`请求
+1. `PUT`, `DELETE`方法的`ajax`请求
 2. 发送`JSON`格式的`ajax`请求(比如`post`数据)
 3. 带自定义头的`ajax`请求
 

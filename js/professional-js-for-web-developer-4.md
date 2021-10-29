@@ -282,6 +282,11 @@ alert(null == undefined); // true
 |  Object   |       任意对象        |       null        |
 | Undefined |    N/A （不存在）     |     undefined     |
 
+### `Number`类型
+
+
+
+
 # 变量, 作用域与内存
 
 ## 原始值与引用值
@@ -327,3 +332,4 @@ alert(null == undefined); // true
    - 同一作用域不能声明两次, 重复的`var`声明会被忽略, 重复的`let`声明会抛出`SyntaxError`
    - `let`的行为非常适合在循环中声明迭代变量
    - `let`在运行时也会提升, 但是因为`TDZ`的缘故, 所以不能在声明之前使用`let`变量
+

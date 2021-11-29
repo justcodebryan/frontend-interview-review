@@ -2,6 +2,10 @@ const PENDING = 'pending';
 const FULFILLED = 'fulfilled';
 const REJECTED = 'rejected';
 
+const isPromise = (target) => {
+  return target instanceof MyPromise;
+};
+
 /**
  * 
  * @param {*} promise2 链式调用生成的第二个promise
@@ -187,6 +191,20 @@ class MyPromise {
         arr[i].then(resolve, reject);
       }
     });
+  }
+
+  static resolve (target) {
+    return new MyPromise(target);
+  }
+
+  static reject (target) {
+    return new MyPromise(null, target);
+  }
+
+  static any (arr) {
+    if (!Array.isArray(arr)) return MyPromise.resolve();
+
+
   }
 }
 

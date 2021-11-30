@@ -1,3 +1,4 @@
+<<<<<<< Updated upstream
 function MyDeepClone (obj, cache = new WeakMap()) {
   if (typeof obj !== 'object') return obj;
   if (cache.get(obj)) return cache.get(obj);
@@ -13,6 +14,27 @@ function MyDeepClone (obj, cache = new WeakMap()) {
   });
 
   return cloneObj;
+=======
+const { isObject } = require('../utils');
+
+
+function MyDeepClone (target) {
+  const res = {};
+
+  // undefined & null
+
+  // RegExp 
+
+  // Function
+
+  Object.keys(target).forEach(key => {
+    if (target.hasOwnProperty(key)) {
+      res[key] = isObject(res[key]) ? MyDeepClone(res[key]) : res[key];
+    }
+  });
+
+  return res;
+>>>>>>> Stashed changes
 }
 
 function MyShallowClone (target) {

@@ -4,6 +4,9 @@
 " 编码
 set enc=utf-8
 
+" 显示命令
+set showcmd
+
 " 不和 vi 兼容
 set nocompatible
 
@@ -119,8 +122,8 @@ set nofoldenable
 
 " 主题
 syntax enable
-colorscheme gruvbox
-set background=dark
+" colorscheme gruvbox
+" set background=dark
 
 " 背景透明
 hi Normal ctermfg=252 ctermbg=none

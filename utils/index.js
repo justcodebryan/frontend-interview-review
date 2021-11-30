@@ -1,37 +1,37 @@
-export function isFunction(target) {
+export function isFunction (target) {
   return typeof target === 'function';
 }
 
-export function isArray(target) {
+export function isArray (target) {
   // return Object.prototype.toString.call(target) === '[object Array]';
   return Array.isArray(target);
 }
 
-export function isBoolean(target) {
+export function isBoolean (target) {
   return typeof target === 'boolean';
 }
 
-export function isString(target) {
+export function isString (target) {
   return typeof target === 'string';
 }
 
-export function isNumber(target) {
+export function isNumber (target) {
   return typeof target === 'number';
 }
 
-export function isObject(target) {
+export function isObject (target) {
   return target && typeof target === 'object';
 }
 
-export function isNull(target) {
+export function isNull (target) {
   return typeof target === 'object' && !target;
 }
 
-export function isUndefined(target) {
+export function isUndefined (target) {
   return typeof target === 'undefined';
 }
 
-export function getImageSize(url, needImage = false) {
+export function getImageSize (url, needImage = false) {
   let image = new Image();
   image.src = url;
   // 跨域问题

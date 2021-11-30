@@ -1,4 +1,4 @@
-function MyDeepClone(obj, cache = new WeakMap()) {
+function MyDeepClone (obj, cache = new WeakMap()) {
   if (typeof obj !== 'object') return obj;
   if (cache.get(obj)) return cache.get(obj);
   if (obj instanceof Date) return new Date(obj);
@@ -10,12 +10,12 @@ function MyDeepClone(obj, cache = new WeakMap()) {
     if (target.hasOwnProperty(key)) {
       cloneObj[key] = MyDeepClone(obj[key], cache);
     }
-  })
+  });
 
   return cloneObj;
 }
 
-function MyShallowClone(target) {
+function MyShallowClone (target) {
   const res = {};
 
   Object.keys(target).forEach(key => {

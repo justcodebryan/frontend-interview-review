@@ -172,6 +172,7 @@
 
      - 不会通过支持`<script type="module">`的浏览器去拉取和执行
      - 然而还是有一些现代浏览器会有`bug`, 并且拉取
+     - `nomodule`作为降级, 当浏览器不支持 es-modules 的时候的兜底方案
 
    `Inline` vs `src`
 

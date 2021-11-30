@@ -1,6 +1,13 @@
 import { isArray } from '../utils/index.js';
 
-function MyApply(thisArgs, argsArray) {
+/**
+ * apply 方法
+ *  - 将方法挂载到对象上, 执行完之后再将方法删除
+ * @param {*} thisArgs 
+ * @param {*} argsArray 
+ * @returns 
+ */
+function MyApply (thisArgs, argsArray) {
   let context = thisArgs || globalThis;
 
   context.fn = this;

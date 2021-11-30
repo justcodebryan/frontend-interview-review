@@ -15,6 +15,8 @@ console.log(objA.__proto__ === Object.prototype); // true
 console.log(objA instanceof Object); // true
 ```
 
+
+
 `new`关键字创建
 和直接用字面量创建没有区别
 创建的新对象的`__proto__`都指向`Object.prototype`

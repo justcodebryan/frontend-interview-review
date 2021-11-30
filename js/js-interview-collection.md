@@ -1,3 +1,7 @@
+- `var`, `let`, `const`的区别
+
+
+
 - `Object.create()`, `new Object()`和`{}`的区别
 直接字面量创建
 ```javascript
@@ -113,4 +117,12 @@ Object.myCreate = function(proto, propertiesObject) {
 ```
 
 - `Javascript`中的`hasOwnProperty`和`in`操作符的不同点
+
+1. `in`操作符只要通过对象能访问到属性 -> 返回`true`
+    `hasOwnProperty`只有属性存在于实例时 -> 返回`true`
+2. `in`只会遍历可枚举属性
+    `hasOwnProperty`是严格限制于可枚举项目
+
+
+- `Symbol`
 

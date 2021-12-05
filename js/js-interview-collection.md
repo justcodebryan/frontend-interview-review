@@ -20,8 +20,57 @@
 # 冻结对象的属性
 
 - `Object.defineProperty()`
+
 - `Object.seal()`
+  `Object.seal()`方法封闭一个对象
+
+  - 阻止添加新属性并将**所有现有属性标记为不可配置**
+  - 当前属性的值只要原来可写的就可以改变
+  - 尝试删除一个密封对象的属性或者将某个密封对象的属性从数据属性转换成访问器属性, 结果会静默失败或抛出`TypeError`(在严格模式中最常见的, 但不唯一)
+  - 不会影响从原型链上继承的属性, 但`__proto__`属性的值也不能修改
+
+  ```javascript
+  const object1 = {
+    property1: 42,
+  };
+
+  Object.seal(object1);
+  object1.property1 = 33;
+  console.log(object1.property1); // expected output: 33
+
+  delete object1.property1;
+  console.log(object1.property1);
+  ```
+
+  **与`Object.freeze()`对比**: 使用`Object.freeze()`冻结的对象中的现有属性值是不可变的, 用`Object.seal()`密封的对象可以改变其现有属性值
+
 - `Object.frozen()`
+
+- `Object.preventExtensions()`
+  `Object.preventExtensions()`方法让一个对象变的不可扩展, 也就是永远不能再添加新的属性
+
+# 对象`Object`的分类
+
+在`ES5`时代, 对象分为三种:
+
+- `native object`(原生对象), 指语义完全由规范定义并且不掺杂任何宿主环境定义的对象
+- `host object`(宿主对象), 由执行环境提供, 比如浏览器的`window`对象和`history`对象. `JS`里的对象不是原生对象就是宿主对象
+- `build-in object`(内置对象), 由`ECMA`实现提供, 程序执行时就存在的对象, 所有内置对象都是原生对象
+
+```text
+`null` -> `Object` -> `native` & `host`
+                        |-> `build-in`
+```
+
+在`ES6`时代, 规范中有关对象的划分变成 4 种:
+
+- `ordinary object`: 普通对象, 需要具备了对象的所有基本内置方法
+- `exotic object`: 外来对象, 如果不完全具备标准对象拥有的基本内置方法, 就是外来对象, `JS`里的对象不是普通对象就是外来对象
+- `standard object`: 标准对象, 语义由本规范定义的对象
+- `build-in object`: 内置对象
+
+`ES5`中对象是以宿主环境为条件划分的
+`ES6`中则是根据对象的基本内置方法
 
 # `Object.create()`, `new Object()`和`{}`的区别
 

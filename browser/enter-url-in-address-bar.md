@@ -422,7 +422,7 @@
 
    - 采用更优的 `API` 替代消费高的 `api`，转换优化消费高的集合
 
-     - 用 `querySelectorAll`()替代 `getElementByXX`()。
+     - 用 `querySelectorAll()` 替代 `getElementByXX()`。
 
      - 开启动画的 `GPU` 加速，把渲染计算交给 `GPU`。
 

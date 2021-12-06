@@ -4,7 +4,7 @@
 2. `let`和`const`是块级作用域, `var`声明的范围是函数作用域
    `let`不允许同一个块作用域出现冗余声明 -> 抛出`SyntaxError`
    `JS`引擎会记录用于变量声明的标识符及其所在的块作用域 -> 嵌套使用相同标识符不会报错, 因为同一个块中没有重复声明
-3. `let`和`const`具有暂时性死区(Temporary Death Zone, TDZ), `var`没有 -> 因为有变量提升的缘故, 在变量声明之前使用该变量不会造成代码报错
+3. `let`和`const`具有暂时性死区(Temporal Death Zone, TDZ), `var`没有 -> 因为有变量提升的缘故, 在变量声明之前使用该变量不会造成代码报错, 抛出`ReferenceError`, `typeof`不再是百分之百安全的操作
 4. `var`声明的变量是会挂载到全局对象上面的`window`, `let`和`const`声明的变量是不会挂载在全局对象上面的
    `for`循环中为什么不会出现`ES5`之前的重复打印同一个数据的情况
    用`let`声明迭代变量时, `JavaScript`引擎在后台会为每个迭代循环声明一个新的迭代变量, 每个`setTimeout`引用的都是不同的变量实例
@@ -205,4 +205,35 @@ Object.myCreate = function (proto, propertiesObject) {
 2. `in`只会遍历可枚举属性
    `hasOwnProperty`是严格限制于可枚举项目
 
+`Object.getOwnPropertyDescriptor()`方法返回制定对象上一个自有属性对应的属性描述符
+  - 自有属性指的是直接赋予该对象的属性, 不需要从原型链上进行查找的属性
+
+`Object.getOwnPropertyName()` 返回一个所有属性的数组
+  - 包含不可枚举的属性但不包括`Symbol`值作为名称的属性, 不会包含原型链上面的属性
+  - 注意: ES5中, 如果方法的参数不是对象, 而是原始值, 则会抛出`TypeError`; 在`ES2015`中, 非对象的参数将被强制转换为一个对象
+
+`Object.keys()`方法会返回一个由一个给定对象的自身可枚举属性组成的数组, 数组中属性名的排列顺序和正常循环遍历该对象时返回的顺序一致
+  - 注意: ES5中, 如果方法的参数不是对象, 而是原始值, 则会抛出`TypeError`; 在`ES2015`中, 非对象的参数将被强制转换为一个对象
+  - 不会获取原型链上面的属性名
+
+
 # `Symbol`
+ES6引入的一种新的原始数据类型
+
+`Symbol`函数前面不能使用`new`操作符, 否则会报错
+`Symbol`函数的参数只是表示对当前`Symbol`值的描述, 因此相同参数的`Symbol`函数的返回值是不同
+`Symbol`值不能和其他类型的值进行运算, 会报错
+`Symbol`值可以显式转为字符串
+`Symbol`值也可以转为布尔值, 但是不能转为数值
+
+## `Symbol.prototype.description`
+返回`Symbol`的描述
+```javascript
+const sym = Symbol('foo');
+
+sym.description // foo
+```
+
+
+
+# `Set` `Map` `WeakMap` `WeakSet`的区别

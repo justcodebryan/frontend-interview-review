@@ -234,6 +234,44 @@ const sym = Symbol('foo');
 sym.description // foo
 ```
 
+`Symbol`作为属性名, 遍历对象的时候, 不会出现在`for...in`, `for...of`循环中, 也不会被`Object.keys()`, `Object.getOwnPropertyNames()`, `JSON.stringify()`返回
+但也不是私有属性, 可以通过`Object.getOwnPropertySymbols()`, 用`Reflect.ownKeys()`可以返回所有类型的键名, 包括常规键名和`Symbol`键名
+
+## `Symbol.for()` `Symbol.keyFor()`
+`Symbol.for()`: 重新使用同一个`Symbol`值
+```javascript
+let s1 = Symbol.for('foo');
+let s2 = Symbol.for('foo');
+
+s1 === s2; // true
+```
+`Symbol.for()`与`Symbol()`
+- 都会生成新的`Symbol`
+- 区别: 前者会被登记在全局环境中供搜索, 后者不会
+- `Symbol.for()`不会每次调用就返回一个新的`Symbol`类型的值, 而是会先检查给定的`key`是否已经存在, 如果不存在才会新建一个值, 如果存在则会返回搜索到的那个值
+
+`Symbol.keyFor()`方法返回一个已登记的`Symbol`类型值的`key`
+```javascript
+let s1 = Symbol.for('foo');
+Symbol.keyFor(s1);  // 'foo'
+
+let s2 = Symbol('foo');
+Symbol.keyFor(s2) // undefined
+// s2属于未登记的Symbol值, 所以返回undefined
+```
+
+`Symbol.for()`为`Symbol`值登记的名字是全局环境, 不管有没有在全局环境运行
+
+可以用在不同`iframe`或`service worker`中取到同一个值
+```javascript
+iframe = document.createElement('iframe');
+iframe.src = String(window.location);
+document.body.appendChild(iframe);
+
+iframe.contentWindow.Symbol.for('foo') === Symbol.for('foo');
+```
+
+
 
 
 # `Set` `Map` `WeakMap` `WeakSet`的区别

@@ -102,7 +102,7 @@ class MyPromise {
     }
   }
 
-  then (onFulfilled, onRejected) {
+  then(onFulfilled, onRejected) {
     onFulfilled = typeof onFulfilled === 'function' ? onFulfilled : (v) => v;
     onRejected = typeof onRejected === 'function'
       ? onRejected
@@ -161,50 +161,138 @@ class MyPromise {
     return promise2;
   }
 
-  static all (arr) {
-    if (!Array.isArray(arr)) return Promise.resolve();
+  // static all(arr) {
+  //   if (!Array.isArray(arr)) return Promise.resolve();
 
-    const result = [];
-    const len = arr.length;
-    for (let i = 0; i < len; i++) {
-      if (!isPromise(arr[i])) {
-        result.push(arr[i]);
-      } else {
-        arr[i].then(
-          res => {
-            result.push(res);
+  //   const result = [];
+  //   const len = arr.length;
+  //   for (let i = 0; i < len; i++) {
+  //     if (!isPromise(arr[i])) {
+  //       result.push(arr[i]);
+  //     } else {
+  //       arr[i].then(
+  //         res => {
+  //           result.push(res);
 
-            if (result.length === len) {
-              resolve(result);
-            }
-          }, err => {
-            reject(err);
-          }
-        );
-      }
+  //           if (result.length === len) {
+  //             resolve(result);
+  //           }
+  //         }, err => {
+  //           reject(err);
+  //         }
+  //       );
+  //     }
+  //   }
+  // }
+
+  static resolve(value) {
+    if (value && typeof value === 'object' && (value instanceof MyPromise)) {
+      return value;
     }
+
+    return new MyPromise((resolve) => {
+      resolve(value);
+    });
   }
 
-  static race (arr) {
-    return new Promise((resolve, reject) => {
-      for (let i = 0; i < arr.length; i++) {
-        arr[i].then(resolve, reject);
+  static reject(value) {
+    return new MyPromise((_, reject) => {
+      reject(value);
+    });
+  }
+
+  static all(value) {
+    return new MyPromise((resolve, reject) => {
+      let count = 0;
+      const result = [];
+      const len = value.length;
+
+      if (len === 0 || len === undefined) {
+        return resolve(result);
+      }
+
+      for (let i = 0; i < len; i++) {
+        MyPromise.resolve(value[i])
+          .then((res) => {
+            count += 1;
+            result[i] = res;
+            if (count === len) {
+              resolve(result);
+            }
+          })
+          .catch(reject);
       }
     });
   }
 
-  static resolve (target) {
-    return new MyPromise(target);
+  static allSettled(value) {
+    return new MyPromise((resolve, reject) => {
+      let count = 0;
+      const len = value.length;
+      const result = [];
+
+      if (len === 0) {
+        return resolve(res);
+      }
+
+      for(let i = 0; i < len; i++) {
+        MyPromise.resolve(value[i])
+          .then((res) => {
+            count += 1;
+            result[i] = {
+              status: FULFILLED,
+              value: res
+            };
+
+            if (count === len) {
+              resolve(res);
+            }
+          })
+          .catch((err) => {
+            count += 1;
+            result[i] = {
+              status: REJECTED,
+              reason: err
+            };
+
+            if (count === len) {
+              resolve(res);
+            }
+          });
+      }
+    });
   }
 
-  static reject (target) {
-    return new MyPromise(null, target);
+  static race(value) {
+    return new MyPromise((resolve, reject) => {
+      const len = value.length;
+      for (let i = 0; i < len; i++) {
+        MyPromise.resolve(value[i]).then((res) => {
+          resolve(res);
+        }).catch((err) => {
+          reject(err);
+        });
+      }
+    });
   }
 
-  static any (arr) {
-    if (!Array.isArray(arr)) return MyPromise.resolve();
-
-
+  static any(value) {
+    return new MyPromise((resolve, reject) => {
+      let count = 0;
+      const len = value.length;
+      const result = [];
+      for (let i = 0; i < len; i++) {
+        MyPromise.resolve(value[i]).then((res) => {
+          resolve(res);
+        }).catch((err) => {
+          count += 1;
+          result[i] = err;
+          if (count === len) {
+            reject('All promises were rejected');
+          }
+        });
+      }
+    });
   }
 }
 

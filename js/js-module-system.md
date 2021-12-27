@@ -50,6 +50,26 @@ return module.exports;
 - `CommonJs`混合导出，还是一种语法，只不过不用声明前面对象而已，当我导出引用对象时之前的导出就被覆盖了
 - `CommonJs`导出值是拷贝，可以修改导出的值，这在代码出错时，不好排查引起变量污染
 
+`Commonjs`里面存在两种写法把函数或者对象暴露到外面
+`exports`和`module.exports`
+当node执行一个文件的时候, 会给这个文件内生成一个`exports`和`module`对象, 而`module`对象有`exports`属性
+这两个属性都指向同一块内存, 但是最后`require`导出的内容是`module.exports`, `exports`仅仅是初始化的时候指向`module.exports`的一个引用, 如果重新赋值, 则指向别的引用了, 后续的修改就不会对`module.exports`造成影响
+```javascript
+let a = 100;
+
+console.log(module.exports);  // {}
+console.log(exports);         // {}
+
+exports.a = 200;
+
+exports = other;
+
+// test.js
+var = require('./utils');
+console.log(a)
+```
+
+
 `Es Module`
 
 - `Es Module`是静态的，不可以动态加载语句，只能声明在该文件的最顶部，代码发生在编译时

@@ -37,3 +37,15 @@ CommonJS 模块是顺序执行的，遇到 require 时，加载并执行对应�
 
 `ES6`模块有 5 种状态, 分别为`unlinked`, `linking`, `linked`, `evaluating`, `evaluated`, 用循环模块记录的`Status`字段表示
 `ES6`模块的处理包括连接`link`和评估`evaluate`两步
+
+node加载ES6模块的方式
+1. ES6模块采用`.mjs`后缀文件名
+2. 项目的`package.json`文件中, 指定`type`字段为`module`, 如果没有`type`字段会默认使用`commonjs`
+
+`.mjs`文件总是以ES6模块加载, `.cjs`文件总是以`commonjs`模块加载, `.js`文件的加载取决于`package.json`里面的`type`字段的设置
+
+浏览器加载ES6模块的方式
+利用`<script type="module"/>`
+
+浏览器加载Commonjs模块会直接报错, 因为浏览器不存在`module`, `exports`, `require`等环境变量
+如果需要在浏览器里面加载Commonjs模块, 则需要用browserify对模块进行转换

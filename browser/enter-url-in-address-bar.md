@@ -11,6 +11,18 @@
      - 如果之前访问过就会存在`DNS`缓存里面(存放一段时间), 这样可以通过在缓存里面检索`IP`地址而不是再通过域名服务器进行查找来加速后续的请求
      - 如果之前没有访问过则需要先用网站的域名去找到对应的`IP`地址
 
+   - 过程
+
+     - 递归查询
+
+       - 链路: 根 DNS 服务器 -> 顶级域服务器 -> 权威服务器 -> 本地 DNS 服务器
+       - 本地 DNS 服务器一对一
+
+     - 迭代查询
+
+       - 本地 DNS 服务器 一对多
+       - 因为此时已经知道根服务器, TLD DNS 服务器, 权威服务器等服务器的 IP
+
    - 需要用到的情况
 
      - 如果以前没有访问过该网址
@@ -78,6 +90,8 @@
    `TLS`或者`SSL`
 
    对称加密, 非对称加密, 数据摘要
+
+   - 将公钥
 
 (以上过程还未发送任何用户的请求)
 
@@ -155,7 +169,7 @@
 
      - 解释为`async`, 如果远古浏览器不支持的话就会解释为`defer`
 
-   `type=module` vs non-module (`type=text/javascript`) vs `<script nomodule>`
+   `type=module` vs `non-module` (`type=text/javascript`) vs `<script nomodule>`
 
    - `type=module`脚本
 
@@ -206,13 +220,10 @@
 
    浏览器检查每个节点, 从根节点开始, 决定哪些`CSS`规则被添加
 
-  `DOMContentLoaded`加载早于`load event`
-  `DOMContentLoaded` - 仅当`DOM`加载完成, 不包括样式表, 图片, `flash`
-    - 浏览器解析完文档便能够触发
-    - 任何情况下, `DOMContentLoaded`的触发不需要等待图片等其他资源加载完成
-  
-  `window.onload`事件 - 页面上面所有的`DOM`, `CSSOM`和其他资源都已经加载完成
-    
+`DOMContentLoaded`加载早于`load event`
+`DOMContentLoaded` - 仅当`DOM`加载完成, 不包括样式表, 图片, `flash` - 浏览器解析完文档便能够触发 - 任何情况下, `DOMContentLoaded`的触发不需要等待图片等其他资源加载完成
+
+`window.onload`事件 - 页面上面所有的`DOM`, `CSSOM`和其他资源都已经加载完成
 
 9. 布局
 

@@ -272,6 +272,27 @@ iframe.contentWindow.Symbol.for('foo') === Symbol.for('foo');
 ```
 
 
+# `return resolve` 和 `resolve`
+`return`会将函数终止, 所以后面的语句就无法继续执行了
 
+```javascript
+new Promise((resolve, reject) => {
+  fs.readFile(file, (err, data) => {
+    if (err) reject(err);
+    return resolve(data);
+    console.log('after return'); // 不可以执行到这里
+  })
+})
+```
+
+```javascript
+new Promise((resolve, reject) => {
+  fs.readFile(file, (err, data) => {
+    if (err) reject(err);
+    resolve(data);
+    console.log('after return'); // 可以执行到这里
+  })
+})
+```
 
 # `Set` `Map` `WeakMap` `WeakSet`的区别

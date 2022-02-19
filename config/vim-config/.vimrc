@@ -94,9 +94,9 @@ set scrolloff=1
 "  常用键映射
 "==========================================
 " Esc键映射为jj
-inoremap jj <Esc>
+" inoremap jj <Esc>
 
-" let mapleader="<Space>"
+let mapleader="\<Space>"
 set timeoutlen=1000
 
 

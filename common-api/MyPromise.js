@@ -1,39 +1,41 @@
-const PENDING = 'pending';
-const FULFILLED = 'fulfilled';
-const REJECTED = 'rejected';
+const PENDING = "pending";
+const FULFILLED = "fulfilled";
+const REJECTED = "rejected";
 
 const isPromise = (target) => {
   return target instanceof MyPromise;
 };
 
 /**
- * 
+ *
  * @param {*} promise2 链式调用生成的第二个promise
  * @param {*} x 当前需要处理的promise或者对象
  * @param {*} resolve 当promise被resolve的时候调用的函数
  * @param {*} reject 当promise被reject的时候调用的函数
- * @returns 
+ * @returns
  */
 // 处理Promise的过程
 const resolvePromise = (promise2, x, resolve, reject) => {
   // 当x和promise2是同一个对象的时候
   // 抛出TypeError
   if (x === promise2) {
-    return reject(new TypeError('Chaining cycle detected for promise #<Promise>'));
+    return reject(
+      new TypeError("Chaining cycle detected for promise #<Promise>")
+    );
   }
 
   // 确保当前的promise只被调用一次
   // 维护一个变量去判断当前的函数是否被调用
   let called = false;
   // 判断当前需要进行处理的参数是否是一个对象或者函数
-  if ((typeof x === 'object' && x !== null) || typeof x === 'function') {
+  if ((typeof x === "object" && x !== null) || typeof x === "function") {
     try {
       // 首先将x.then存起来
       // 确保对象的then被改变的时候还能拿到最开始的那个then属性
       let then = x.then;
       // 如果then是一个函数的话
       // 在x的context下进行调用
-      if (typeof then === 'function') {
+      if (typeof then === "function") {
         // then是一个双参函数
         // 第一个参数是resolve, 第二个参数是reject
         then.call(
@@ -103,12 +105,13 @@ class MyPromise {
   }
 
   then(onFulfilled, onRejected) {
-    onFulfilled = typeof onFulfilled === 'function' ? onFulfilled : (v) => v;
-    onRejected = typeof onRejected === 'function'
-      ? onRejected
-      : (r) => {
-        throw r;
-      };
+    onFulfilled = typeof onFulfilled === "function" ? onFulfilled : (v) => v;
+    onRejected =
+      typeof onRejected === "function"
+        ? onRejected
+        : (r) => {
+            throw r;
+          };
 
     let promise2 = new MyPromise((resolve, reject) => {
       if (this.status === FULFILLED) {
@@ -161,6 +164,13 @@ class MyPromise {
     return promise2;
   }
 
+  finally() {
+    return this.then(
+      (res) => Promise.resolve(onFinally()).then(() => res),
+      (err) => Promise.resolve(onFinally()).then(() => Promise.reject(err))
+    );
+  }
+
   // static all(arr) {
   //   if (!Array.isArray(arr)) return Promise.resolve();
 
@@ -186,7 +196,7 @@ class MyPromise {
   // }
 
   static resolve(value) {
-    if (value && typeof value === 'object' && (value instanceof MyPromise)) {
+    if (value && typeof value === "object" && value instanceof MyPromise) {
       return value;
     }
 
@@ -235,13 +245,13 @@ class MyPromise {
         return resolve(res);
       }
 
-      for(let i = 0; i < len; i++) {
+      for (let i = 0; i < len; i++) {
         MyPromise.resolve(value[i])
           .then((res) => {
             count += 1;
             result[i] = {
               status: FULFILLED,
-              value: res
+              value: res,
             };
 
             if (count === len) {
@@ -252,7 +262,7 @@ class MyPromise {
             count += 1;
             result[i] = {
               status: REJECTED,
-              reason: err
+              reason: err,
             };
 
             if (count === len) {
@@ -267,11 +277,13 @@ class MyPromise {
     return new MyPromise((resolve, reject) => {
       const len = value.length;
       for (let i = 0; i < len; i++) {
-        MyPromise.resolve(value[i]).then((res) => {
-          resolve(res);
-        }).catch((err) => {
-          reject(err);
-        });
+        MyPromise.resolve(value[i])
+          .then((res) => {
+            resolve(res);
+          })
+          .catch((err) => {
+            reject(err);
+          });
       }
     });
   }
@@ -282,15 +294,17 @@ class MyPromise {
       const len = value.length;
       const result = [];
       for (let i = 0; i < len; i++) {
-        MyPromise.resolve(value[i]).then((res) => {
-          resolve(res);
-        }).catch((err) => {
-          count += 1;
-          result[i] = err;
-          if (count === len) {
-            reject('All promises were rejected');
-          }
-        });
+        MyPromise.resolve(value[i])
+          .then((res) => {
+            resolve(res);
+          })
+          .catch((err) => {
+            count += 1;
+            result[i] = err;
+            if (count === len) {
+              reject("All promises were rejected");
+            }
+          });
       }
     });
   }

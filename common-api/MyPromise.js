@@ -164,36 +164,16 @@ class MyPromise {
     return promise2;
   }
 
-  finally() {
+  catch(onRejected) {
+    return this.then(null, onRejected);
+  }
+
+  finally(onFinally) {
     return this.then(
       (res) => Promise.resolve(onFinally()).then(() => res),
       (err) => Promise.resolve(onFinally()).then(() => Promise.reject(err))
     );
   }
-
-  // static all(arr) {
-  //   if (!Array.isArray(arr)) return Promise.resolve();
-
-  //   const result = [];
-  //   const len = arr.length;
-  //   for (let i = 0; i < len; i++) {
-  //     if (!isPromise(arr[i])) {
-  //       result.push(arr[i]);
-  //     } else {
-  //       arr[i].then(
-  //         res => {
-  //           result.push(res);
-
-  //           if (result.length === len) {
-  //             resolve(result);
-  //           }
-  //         }, err => {
-  //           reject(err);
-  //         }
-  //       );
-  //     }
-  //   }
-  // }
 
   static resolve(value) {
     if (value && typeof value === "object" && value instanceof MyPromise) {

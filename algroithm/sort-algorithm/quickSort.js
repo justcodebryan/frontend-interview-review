@@ -1,7 +1,8 @@
-const { customComparator, printArray, generateRandomArray } = require('./utils');
+import { customComparator, printArray, generateRandomArray } from './utils.js';
 
+// 荷兰国旗问题
 const netherlandsFlags = function () {
-  function partition(nums, l, r, p) {
+  function partition (nums, l, r, p) {
     let less = l - 1;
     let more = r + 1;
     while (l < more) {
@@ -16,7 +17,7 @@ const netherlandsFlags = function () {
     return [less + 1, more - 1];
   }
 
-  function swap(arr, i, j) {
+  function swap (arr, i, j) {
     const temp = arr[i];
     arr[i] = arr[j];
     arr[j] = temp;
@@ -30,8 +31,9 @@ const netherlandsFlags = function () {
   console.log(res[1]);
 };
 
+// 快排
 const quickSort = function (nums) {
-  function partition(arr, l, r) {
+  function partition (arr, l, r) {
     let less = l - 1;
     let more = r;
     while (l < more) {
@@ -47,16 +49,16 @@ const quickSort = function (nums) {
     return [less + 1, more];
   }
 
-  function swap(arr, i, j) {
+  function swap (arr, i, j) {
     const temp = arr[i];
     arr[i] = arr[j];
     arr[j] = temp;
   }
 
-  function helper(arr, l, r) {
+  function helper (arr, l, r) {
     if (l < r) {
       // 随机快排，随机选择一个数字放在最后一个数
-      swap(arr, l + Math.floor(Math.random() * (r - l + 1)), r);
+      // swap(arr, l + Math.floor(Math.random() * (r - l + 1)), r);
       // 返回值等于区域的左边界和右边界
       let p = partition(arr, l, r);
       helper(arr, l, p[0] - 1);

@@ -1,4 +1,4 @@
-const isEqual = function (arr1, arr2) {
+export const isEqual = function (arr1, arr2) {
   if ((arr1 === null && arr2 !== null) || (arr1 !== null && arr2 === null)) return false;
   if (arr1 === null && arr2 === null) return true;
   if (arr1.length !== arr2.length) return false;
@@ -10,7 +10,7 @@ const isEqual = function (arr1, arr2) {
   return true;
 };
 
-const copyArray = function (arr) {
+export const copyArray = function (arr) {
   if (arr === null) {
     return null;
   }
@@ -21,7 +21,7 @@ const copyArray = function (arr) {
   return res;
 };
 
-const generateRandomArray = function (maxSize, maxValue) {
+export const generateRandomArray = function (maxSize, maxValue) {
   const arr = [];
   for (let i = 0; i < maxSize + 1; i++) {
     arr[i] = (maxValue + 1) * Math.random() - maxValue * Math.random();
@@ -29,7 +29,7 @@ const generateRandomArray = function (maxSize, maxValue) {
   return arr;
 };
 
-const printArray = function (arr) {
+export const printArray = function (arr) {
   if (arr === null) {
     return null;
   }
@@ -39,13 +39,13 @@ const printArray = function (arr) {
   console.log('\n');
 };
 
-const comparator = function (arr) {
+export const comparator = function (arr) {
   arr.sort((a, b) => {
     return a - b;
   });
 };
 
-const customComparator = function (testFunc) {
+export const customComparator = function (testFunc) {
   const beginTime = new Date();
   // const testTime = 500000;
   const testTime = 50000;
@@ -73,13 +73,4 @@ const customComparator = function (testFunc) {
   console.log('-------TEST RESULT-------');
   console.log('The testFunc passed or not? -> ', succeed ? 'Yes' : 'No');
   console.log('The time that testFunc consuming -> ', deltaTime);
-};
-
-module.exports = {
-  customComparator,
-  comparator,
-  isEqual,
-  generateRandomArray,
-  copyArray,
-  printArray
 };

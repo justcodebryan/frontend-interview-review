@@ -221,6 +221,7 @@
    浏览器检查每个节点, 从根节点开始, 决定哪些`CSS`规则被添加
 
 `DOMContentLoaded`加载早于`load event`
+
 `DOMContentLoaded` - 仅当`DOM`加载完成, 不包括样式表, 图片, `flash` - 浏览器解析完文档便能够触发 - 任何情况下, `DOMContentLoaded`的触发不需要等待图片等其他资源加载完成
 
 `window.onload`事件 - 页面上面所有的`DOM`, `CSSOM`和其他资源都已经加载完成

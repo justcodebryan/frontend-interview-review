@@ -154,7 +154,7 @@ map <C-n> :NERDTreeToggle<CR>
 let NERDTreeMinimalUI = 1
 let NERDTreeShowHidden = 1
 
-let g:nerdtree_tabs_open_on_console_startup = 1
+" let g:nerdtree_tabs_open_on_console_startup = 1
 
 " i 在新的水平分割的窗口中打开
 " s 在新的竖直分割的窗口中打开
@@ -236,8 +236,8 @@ Plug 'w0rp/ale'                                       " https://github.com/w0rp/
 
 let g:ale_fix_on_save = 1
 let g:ale_sign_column_always = 1
-let g:ale_sign_error = '●'
-let g:ale_sign_warning = '▶'
+let g:ale_sign_error = '✖'
+let g:ale_sign_warning = '⚠'
 
 nmap <silent> <C-k> <Plug>(ale_previous_wrap)
 nmap <silent> <C-j> <Plug>(ale_next_wrap)

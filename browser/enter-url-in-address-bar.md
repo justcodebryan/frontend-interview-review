@@ -182,9 +182,9 @@
      - 当浏览器不支持的时候不会执行
      - 但是在`IE 11`, `Firefox 52 ESR`等仍然会拉取代码
 
-   - `<script module >`
+   - `<script module />`
 
-     - 不会通过支持`<script type="module">`的浏览器去拉取和执行
+     - 不会通过支持`<script type="module" />`的浏览器去拉取和执行
      - 然而还是有一些现代浏览器会有`bug`, 并且拉取
      - `nomodule`作为降级, 当浏览器不支持 es-modules 的时候的兜底方案
 
@@ -486,10 +486,10 @@
        <h2>Hello</h2>
        <script>
          function printH2() {
-           console.log('first script', document.querySelectorAll('h2'));
+           console.log('first script', document.querySelectorAll('h2'))
          }
-         printH2();
-         setTimeout(printH2);
+         printH2()
+         setTimeout(printH2)
        </script>
        <link
          rel="stylesheet"
@@ -497,7 +497,7 @@
        />
        <h2>World</h2>
        <script>
-         console.log('second script');
+         console.log('second script')
        </script>
      </body>
    </html>

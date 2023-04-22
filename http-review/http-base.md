@@ -34,7 +34,7 @@
 - 传输层
   传输层对接上层应用层, 提供处于网络连接中两台计算机之间的数据传输所使用的协议
   传输层有两个性质不同的协议:
-  - `TCP`(`Transimission Control Protocol`) - 传输控制协议
+  - `TCP`(`Transmission Control Protocol`) - 传输控制协议
     - 全双工
     - 三次握手建立连接, 四次挥手断开连接 -> 传输稳定可靠
     - 没有`UDP`那么高效

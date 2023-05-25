@@ -1,41 +1,42 @@
 interface IPullRefreshConfig {
-  ele?: HTMLElement | null;
-  enabled?: boolean;
-  refreshListener?: () => void;
-  refreshStyleConfig?: Record<string, string>;
+  ele?: HTMLElement | null
+  enabled?: boolean
+  refreshListener?: () => void
+  refreshStyleConfig?: Record<string, string>
 }
 
 enum PullDirection {
   UNKNOWN,
   DOWN,
-  UP
+  UP,
 }
 
 function defaultRefreshListener() {
   // eslint-disable-next-line no-restricted-globals
-  location.reload();
+  location.reload()
 }
 
 const defaultRefreshStyleConfig = {
   color: '#000',
   fontSize: '12px',
-  backgroundColor: 'rgba(255, 255, 255, 1)'
-};
+  backgroundColor: 'rgba(255, 255, 255, 1)',
+}
 
 export default class PullRefreshFactory {
   constructor(config: IPullRefreshConfig = {}) {
-    this.ele = config.ele || document.body;
-    this.enabled = config.enabled || false;
-    this.refreshListener = config.refreshListener || defaultRefreshListener;
-    this.refreshStyleConfig = config.refreshStyleConfig || defaultRefreshStyleConfig;
+    this.ele = config.ele || document.body
+    this.enabled = config.enabled || false
+    this.refreshListener = config.refreshListener || defaultRefreshListener
+    this.refreshStyleConfig =
+      config.refreshStyleConfig || defaultRefreshStyleConfig
 
-    this.init();
+    this.init()
   }
 
-  ele: HTMLElement;
-  enabled: boolean = (window as any).__pull_refresh_enabled__ || false;
+  ele: HTMLElement
+  enabled: boolean = (window as any).__pull_refresh_enabled__ || false
 
-  refreshListener: () => void;
+  refreshListener: () => void
 
   position = {
     startX: 0,
@@ -43,119 +44,129 @@ export default class PullRefreshFactory {
     endX: 0,
     endY: 0,
     direction: PullDirection.UNKNOWN,
-    scrollOnTop: true
-  };
+    scrollOnTop: true,
+  }
 
-  loading: boolean = false;
+  loading: boolean = false
 
-  refreshContainer: HTMLElement | null = null;
+  refreshContainer: HTMLElement | null = null
 
-  timer: NodeJS.Timeout | undefined;
+  timer: NodeJS.Timeout | undefined
 
-  refreshStyleConfig: Record<string, string> = defaultRefreshStyleConfig;
+  refreshStyleConfig: Record<string, string> = defaultRefreshStyleConfig
 
   setEnabled(flag: boolean) {
-    this.enabled = flag;
-    (window as any).setPullRefreshEnabled(flag);
+    this.enabled = flag
+    ;(window as any).setPullRefreshEnabled(flag)
   }
 
   setRefreshListener(fn: any) {
-    this.refreshListener = fn;
+    this.refreshListener = fn
   }
 
   setLoading(flag: boolean) {
-    this.loading = flag;
+    this.loading = flag
   }
 
   setRefreshContainer(container: HTMLElement) {
-    this.refreshContainer = container;
+    this.refreshContainer = container
   }
 
   checkScrollIsOnTop() {
-    const top = document.documentElement.scrollTop || document.body.scrollTop;
-    return top <= 0;
+    const top = document.documentElement.scrollTop || document.body.scrollTop
+    return top <= 0
   }
 
   initTouchStart() {
-    const _self = this;
+    const _self = this
     _self.ele.addEventListener('touchstart', function (event: TouchEvent) {
-      if (!_self.enabled) return;
+      if (!_self.enabled) return
 
       Object.assign(_self.position, {
         scrollOnTop: _self.checkScrollIsOnTop(),
         startX: event.touches[0].pageX,
-        startY: event.touches[0].pageY
-      });
-    });
+        startY: event.touches[0].pageY,
+      })
+    })
   }
 
   initTouchMove() {
-    const _self = this;
+    const _self = this
     _self.ele.addEventListener('touchmove', function (event: TouchEvent) {
-      const { startX, startY, scrollOnTop } = _self.position;
-      const offsetX = event.touches[0].pageX - startX;
-      const offsetY = event.touches[0].pageY - startY;
+      const { startX, startY, scrollOnTop } = _self.position
+      const offsetX = event.touches[0].pageX - startX
+      const offsetY = event.touches[0].pageY - startY
 
       if (offsetY > 150 && offsetY > Math.abs(offsetX)) {
-        _self.position.direction = PullDirection.DOWN;
+        _self.position.direction = PullDirection.DOWN
       } else if (offsetY < 0 && Math.abs(offsetY) > Math.abs(offsetX)) {
-        _self.position.direction = PullDirection.UP;
+        _self.position.direction = PullDirection.UP
       } else {
-        _self.position.direction = PullDirection.UNKNOWN;
+        _self.position.direction = PullDirection.UNKNOWN
       }
 
-      if (!_self.enabled || _self.loading || !scrollOnTop || _self.position.direction !== PullDirection.DOWN) return;
+      if (
+        !_self.enabled ||
+        _self.loading ||
+        !scrollOnTop ||
+        _self.position.direction !== PullDirection.DOWN
+      )
+        return
 
-      console.log('到达下拉阈值: ', offsetY);
+      console.log('到达下拉阈值: ', offsetY)
 
-      _self.setLoading(true);
+      _self.setLoading(true)
       Object.assign(_self.ele.style, {
         transform: 'translate3d(0, 100px, 0)',
-        transition: 'all ease .5s'
-      });
+        transition: 'all ease .5s',
+      })
 
-      (_self.refreshContainer as HTMLElement).innerHTML = '下拉刷新内容...';
-    });
+      ;(_self.refreshContainer as HTMLElement).innerHTML = '下拉刷新内容...'
+    })
   }
 
   initTouchEnd() {
-    const _self = this;
+    const _self = this
     _self.ele.addEventListener('touchend', function (event: TouchEvent) {
-      if (!_self.enabled) return;
+      if (!_self.enabled) return
 
-      const { scrollOnTop, direction } = _self.position;
-      if (!scrollOnTop || direction !== PullDirection.DOWN || !_self.loading) return;
-      (_self.refreshContainer as HTMLElement).innerHTML = '<div class="refresh-icon"></div>';
+      const { scrollOnTop, direction } = _self.position
+      if (!scrollOnTop || direction !== PullDirection.DOWN || !_self.loading)
+        return
+      ;(_self.refreshContainer as HTMLElement).innerHTML =
+        '<div class="refresh-icon"></div>'
       _self.timer = setTimeout(function () {
-        if (_self.timer) clearTimeout(_self.timer);
-        (_self.refreshContainer as HTMLElement).innerHTML = '';
+        if (_self.timer) clearTimeout(_self.timer)
+        ;(_self.refreshContainer as HTMLElement).innerHTML = ''
         Object.assign(_self.ele.style, {
           transform: 'translate3d(0, 0, 0)',
-          transition: 'all cubic-bezier(.21, 1.93, .53, .64) .5s'
-        });
-        _self.setLoading(false);
-        _self.position.direction = PullDirection.UNKNOWN;
+          transition: 'all cubic-bezier(.21, 1.93, .53, .64) .5s',
+        })
+        _self.setLoading(false)
+        _self.position.direction = PullDirection.UNKNOWN
         setTimeout(() => {
-          _self.refreshListener();
+          _self.refreshListener()
           setTimeout(() => {
             Object.assign(_self.ele.style, {
               transform: '',
-              transition: ''
-            });
-          }, 500);
-        });
-      }, 1000);
-    });
+              transition: '',
+            })
+          }, 500)
+        })
+      }, 1000)
+    })
   }
 
   initRefreshStyle(cssStr: string = '') {
     if (document.getElementById('pull_refresh__style') && cssStr.length > 0) {
-      (document.getElementById('pull_refresh__style') as HTMLElement).innerHTML = cssStr;
-      return;
+      ;(
+        document.getElementById('pull_refresh__style') as HTMLElement
+      ).innerHTML = cssStr
+      return
     }
 
-    const styleDOM = document.createElement('style');
-    styleDOM.id = 'pull_refresh__style';
+    const styleDOM = document.createElement('style')
+    styleDOM.id = 'pull_refresh__style'
     styleDOM.innerHTML = `
       .pull_refresh__container {
         position: absolute;
@@ -188,36 +199,36 @@ export default class PullRefreshFactory {
           transform: rotate(360deg);
         }
       }
-    `;
+    `
 
-    document.head.appendChild(styleDOM);
+    document.head.appendChild(styleDOM)
   }
 
   initRefreshContainer() {
-    const refreshDOM = document.createElement('div');
-    refreshDOM.classList.add('pull_refresh__container');
+    const refreshDOM = document.createElement('div')
+    refreshDOM.classList.add('pull_refresh__container')
 
     if (!this.ele.firstElementChild) {
-      this.ele.appendChild(refreshDOM);
-      return;
+      this.ele.appendChild(refreshDOM)
+      return
     }
 
-    this.ele.insertBefore(refreshDOM, this.ele.firstElementChild);
+    this.ele.insertBefore(refreshDOM, this.ele.firstElementChild)
     setTimeout(() => {
-      this.setRefreshContainer(refreshDOM);
-    }, 0);
+      this.setRefreshContainer(refreshDOM)
+    }, 0)
   }
 
   init() {
-    (window as any).setPullRefreshEnabled = function (flag: boolean) {
-      (window as any).__pull_refresh_enabled__ = flag;
-    };
+    ;(window as any).setPullRefreshEnabled = function (flag: boolean) {
+      ;(window as any).__pull_refresh_enabled__ = flag
+    }
 
-    this.setEnabled(true);
-    this.initRefreshStyle();
-    this.initRefreshContainer();
-    this.initTouchStart();
-    this.initTouchMove();
-    this.initTouchEnd();
+    this.setEnabled(true)
+    this.initRefreshStyle()
+    this.initRefreshContainer()
+    this.initTouchStart()
+    this.initTouchMove()
+    this.initTouchEnd()
   }
 }

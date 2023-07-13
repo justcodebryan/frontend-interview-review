@@ -67,7 +67,7 @@
    视区外图片先不加载，当进入视区或者进入视区之前的某个位置加载；
    1、css 的 loading 属性；
    2、getBoundingClientRect 方法，获取 dom 元素的 top、left、bottom、right、height、width 信息，对比视区大小，进行图片加载（需要结合节流）；
-   3、IntersectionOberser 方法，能够监听元素是否到达当前视口的事件；
+   3、IntersectionObserver 方法，能够监听元素是否到达当前视口的事件；
    字体图标
    一个图标字体比一系列图像要小，一旦图标字体加载了，图标就会马上渲染出来，不需要下载一个图像，可以减少 HTTP 请求。
    base64 编码

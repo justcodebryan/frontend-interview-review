@@ -12,7 +12,7 @@ On wsl2 distribution, modify the `.wslconfig`.
 
 Step 1. Update the wsl version to latest version.
 
-```powershell
+```pwsh
 
 wsl --update
 

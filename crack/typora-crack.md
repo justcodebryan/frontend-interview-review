@@ -1,0 +1,1 @@
+[Typora Crack](https://github.com/hazukieq/Yporaject)

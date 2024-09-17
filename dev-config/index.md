@@ -261,7 +261,10 @@ yarn config set registry https://registry.npmmirror.com
 ## PowerShell Alias & Proxy
 
 ```pwsh
-# Set proxy config function
+# Custom Aliases Start
+
+# Alias: setproxy
+# Usage: Set proxy config function
 function Set-Proxy {
   $env:HTTP_PROXY="http://127.0.0.1:15236"
   $env:HTTPS_PROXY="http://127.0.0.1:15236"
@@ -269,7 +272,8 @@ function Set-Proxy {
 
 Set-Alias -Name setproxy -Value Set-Proxy
 
-# Unset proxy config function
+# Alias: unsetproxy
+# Usage: Unset proxy config function
 function Unset-Proxy {
   $env:HTTP_PROXY=$null
   $env:HTTPS_PROXY=$null
@@ -277,14 +281,22 @@ function Unset-Proxy {
 
 Set-Alias -Name unsetproxy -Value Unset-Proxy
 
-# Get environment variables and print on console
+# Alias: env
+# Usage: Get environment variables and print on console
 function Get-EnvVariables {
   Get-ChildItem env:
 }
 Set-Alias -Name env -Value Get-EnvVariables
 
-# Set UI Language to English
+# Custom Aliases End
+
+# Custom Settings Start
+
+# Setting: UI Language
+# Usage: Set UI Language to English
 [cultureinfo]::CurrentUICulture = 'en-US'
+
+# Custom Settings End
 ```
 
 ## Install Scoop
@@ -400,6 +412,7 @@ yarn config set registry https://registry.npmmirror.com
 - Install Java
 
 ```pwsh
+# Add Java Bucket To Scoop
 scoop bucket add java
 
 # Install The Latest OpenJDK

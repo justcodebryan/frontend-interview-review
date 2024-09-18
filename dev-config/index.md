@@ -155,7 +155,43 @@ function unsetproxy {
 
   echo "[info]: proxy unset."
 }
+
+# if the wsl distribution is version 2.
+# For version less than 5.x.x of react-scripts
+# Enable Front-End Project Hot Module Reloading(HMR)
+# source: https://github.com/facebook/create-react-app/issues/10253
+# export CHOKIDAR_USEPOLLING=true
+
+# For version 5.x.x of react-scripts
+# source: https://github.com/facebook/create-react-app/issues/10253#issuecomment-1127340307
+# export WATCHPACK_POLLING=true
 ```
+
+if the wsl distribution is version 2.
+
+Run following command on terminal
+```bash
+# To solve HMR extremely slow problem
+# Listen uses inotify by default on Linux to monitor directories for changes. It's not uncommon to encounter a system limit on the number of files you can monitor. For example, Ubuntu Lucid's (64bit) inotify limit is set to 8192.
+# When this limit is not enough to monitor all files inside a directory, the limit must be increased for Listen to work properly.
+# source: https://gist.github.com/ntamvl/7c41acee650d376863fd940b99da836f
+echo fs.inotify.max_user_watches=524288 | sudo tee -a /etc/sysctl.conf
+
+sudo sysctl -p
+```
+
+Use windows proxy as default. Create mirrored network for the wsl2.
+```wslconfig
+[wsl2]
+
+[experimental]
+sparseVhd=true
+networkingMode=mirrored
+firewall=true
+dnsTunneling=true
+autoProxy=true
+```
+
 
 ## Oh-My-Zsh Plugins
 

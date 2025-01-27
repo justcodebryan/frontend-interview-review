@@ -128,7 +128,27 @@ sh -c "$(wget -O- https://install.ohmyz.sh/)"
 ```
 
 ## Zsh/Bash Profile Alias & Proxy
+Touch a new file for saving aliases.
 ```bash
+touch ~/.zsh_aliases
+```
+
+Source `~/.zsh_aliases` inside the `~/.zshrc`.
+```config
+# .zshrc
+source ~/.zsh_aliases
+```
+
+Current Aliases List
+```bash
+# .zsh_aliases
+alias yarn="corepack yarn"
+alias yarnpkg="corepack yarnpkg"
+alias pnpm="corepack pnpm"
+alias pnpx="corepack pnpx"
+alias npm="corepack npm"
+alias npx="corepack npx"
+
 function setproxy {
   local proxy_protocol='http'
   local proxy_host='127.0.0.1'
@@ -190,6 +210,9 @@ networkingMode=mirrored
 firewall=true
 dnsTunneling=true
 autoProxy=true
+
+[interop]
+appendWindowsPath=false
 ```
 
 

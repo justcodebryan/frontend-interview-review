@@ -316,6 +316,11 @@ npm install -g yarn pnpm eslint prettier ts-node typescript
 yarn config set registry https://registry.npmmirror.com
 ```
 
+6. Config Corepack
+After update to node 16+ version, import the corepack library to manage the package manager.
+But it is still an experimental tool, there are some bugs still remaining.
+[Resolve Solution](https://stackoverflow.com/questions/74278757/not-able-to-install-yarn-through-corepack)
+
 # Windows
 ## PowerShell Alias & Proxy
 

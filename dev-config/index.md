@@ -437,6 +437,9 @@ scoop install pwsh
 # Install Python3
 scoop install python
 
+# Install MySQL
+scoop install mysql -g
+
 # Add Extras Bucket To Scoop
 scoop bucket add extras
 
